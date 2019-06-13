@@ -11,12 +11,16 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     
     <link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
 
     <link href="https://fonts.googleapis.com/css?family=Oswald|Roboto&display=swap" rel="stylesheet">
+    
+    <script src="https://kit.fontawesome.com/96e3f1b7ca.js"></script>
+    
 
     {% if title %}
         <title>Laugo - {{ title }}</title>
@@ -25,25 +29,114 @@
     {% endif %}
   </head>
   <body>
+
     <div class="wrapper">
-
-        <!-- Sidebar -->
-        <nav id="sidebar">
-            ...
-        </nav>
-
-        <!-- Page Content -->
-        <div id="content">
-            <!-- We'll fill this with dummy content -->
+      <!-- Sidebar Holder -->
+      <nav id="sidebar">
+        <div class="sidebar-header">
+          <h3><i class="fas fa-paw"></i> Laugo</h3>
+          
         </div>
 
-    </div>  
+        <ul class="list-unstyled components">  
 
-    {% comment %} bootstrap {% endcomment %}
+          <li class="active">
+            <a href="#"> <i class="fas fa-home nav-icn"></i> Dashboard</a>
+
+            <a href="#inventory-submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-prescription-bottle nav-icn"></i> Inventory</a>
+            <ul class="collapse list-unstyled" id="inventory-submenu">
+              <li>
+                <a href="{% url 'product-list' %}">Product List</a>
+              </li>
+              <li>
+                <a href="#">Purchase</a>
+              </li>
+              <li>
+                <a href="{% url 'purchase-list' %}">Purchase List</a>
+              </li>
+              
+            </ul>
+          </li>
+
+          <li>            
+            <a href="#sales-submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> <i class="fas fa-cash-register nav-icn"></i> Sales</a>
+            <ul class="collapse list-unstyled" id="sales-submenu">
+              <li>
+                <a href="#">Sales</a>
+              </li>  
+              <li>
+                <a href="#">Report</a>
+              </li>
+            </ul>
+          </li>
+
+          
+        </ul>
+
+        <ul class="list-unstyled CTAs">
+            <li>
+                <a href="#" class="download">Contact Jerome</a>
+            </li>
+            <li>
+                <a href="#" class="article">Back to article</a>
+            </li>
+        </ul>
+      </nav>
+
+      <!-- Page Content Holder -->
+      <div id="content" class="content-wrapper" >
+
+          <nav class="navbar navbar-expand-lg navbar-light bg-light">
+              <div class="container-fluid">
+
+                  <button type="button" id="sidebarCollapse" class="navbar-btn">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                  </button>
+                  <h2 class="page-title">{{ title }}</h2>
+                  <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                      <svg class="svg-inline--fa fa-align-justify fa-w-14" aria-hidden="true" data-prefix="fas" data-icon="align-justify" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M0 84V44c0-8.837 7.163-16 16-16h416c8.837 0 16 7.163 16 16v40c0 8.837-7.163 16-16 16H16c-8.837 0-16-7.163-16-16zm16 144h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 256h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0-128h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path></svg><!-- <i class="fas fa-align-justify"></i> -->
+                  </button>
+
+                  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                      <ul class="nav navbar-nav ml-auto">
+                          <li class="nav-item active">
+                              <a class="nav-link" href="#">{{ user.get_full_name }} </a>
+                          </li>
+                          <li class="nav-item">
+                              <a class="nav-link" href="#">Logout</a>
+                          </li>
+                          
+                      </ul>
+                  </div>
+              </div>
+          </nav>
+          
+          <div>
+            {% block body %}            
+            {% endblock %}
+          </div>
+          
+      </div>
+    </div>
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  
-    
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+                $(this).toggleClass('active');
+            });
+        });
+    </script>
+
+
   </body>
 </html>
