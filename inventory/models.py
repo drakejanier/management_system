@@ -4,13 +4,14 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django import forms
 from phone_field import PhoneField
+from datetime import datetime
 # Create your models here.
 
 class Products(models.Model):
     Name = models.CharField(max_length=50)
     Unit = models.CharField(max_length=50)
     Quantity = models.IntegerField(default=0)
-    List_Price = models.DecimalField(max_digits=6, decimal_places=2)
+    List_Price = models.DecimalField(max_digits=8, decimal_places=2)
     CategoryOpt = (
         ('food','Food'),
         ('medicine','Medicine'),
@@ -21,7 +22,7 @@ class Products(models.Model):
         ('others','Others'),
     )
     Category = models.ForeignKey('Category', on_delete=models.CASCADE)
-    User = models.ForeignKey(User, on_delete=models.CASCADE)
+    User = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     
     class Meta:
         verbose_name_plural = "Products"
@@ -57,12 +58,13 @@ class Purchase(models.Model):
     Item = models.ForeignKey(Products, on_delete=models.CASCADE)
     Supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
     Quantity = models.IntegerField(default=0)
-    Cost = models.DecimalField(max_digits=6, decimal_places=2)
-    Date_Purchased = models.DateTimeField(default=timezone.now)
+    Cost = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+    Total_Cost = models.IntegerField(default=0)
+    Date_Purchased = models.DateTimeField(default=datetime.now)
     User = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     
     def __str__(self):
-        return '{0} {1}'.format(self.Item, self.Date_Purchased.strftime('%m/%d/%y %I:%M%p'))
+        return '{0} {1}'.format(self.Item, self.Date_Purchased)
     
     def get_absolute_url(self):
         

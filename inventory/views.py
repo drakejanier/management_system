@@ -66,35 +66,50 @@ class PurchaseAdd(CreateView): #CHECK IF TEMP
         return super().form_valid(form)
 
 def PurchaseNewItem(request):
-        
+    
     if request.method == 'POST':
         product_form = ProductForm(request.POST)
         purchase_form = PurchaseForm(request.POST)
+        user_reg = 'jerome'
+        print(product_form.errors)
         
         
         
+            
         if product_form.is_valid() and purchase_form.is_valid():
+            print("2")
             
             added_qty = product_form['Quantity'].value()
+            #product_form.User = 'jerome'
             added_product = product_form.save()
+            print("3")
             
             item_pk = added_product.pk
             product_item = Products.objects.get(pk = item_pk)
             
+            print("4")
             add_purchase = purchase_form.save(commit=False)
             add_purchase.Item = product_item
+            print(product_item)
             add_purchase.Quantity = added_qty
             add_purchase.save()
             
             messages.success(request, f'Added new product.')            
             return redirect('product-list')
+        
+        else:
+            print("5")
+            messages.success(request, f'Added new product.')            
+            
     else:
+        print("6")
         product_form = ProductForm()
         purchase_form = PurchaseForm()
         
     context = {
         'product_form' : product_form,
         'purchase_form' : purchase_form,
+        'title' : 'ADD NEW PRODUCT'
     }
     
     return render (request, 'inventory/purchase_New.html', context)

@@ -1,0 +1,74 @@
+{% extends 'inventory/base.html' %}
+
+{% block body %}
+<div class="card content-card">
+    <div class="button-group">    
+        
+        <a href="{% url 'product-list' %}" class="btn btn-outline-primary btn-md" rold="button">REFRESH</a>
+        
+    </div>
+    <table class="table table-hover" id="product-table">
+        <thead class="thead-dark tbl-head">
+            <th>ID</th>
+            <th>Name</th>
+            <th>Unit</th>
+            <th>Quantity</th>
+            <th>List Price</th>
+            <th>Category</th>  
+            <th></th>
+            <th></th>  
+        </thead>
+
+        <tbody>
+            {% for item in items %}
+            
+            <tr>
+                <td>{{ item.pk }}</td>
+                <td>{{ item.Name }}</td>
+                <td>{{ item.Unit }}</td>
+                <td>{{ item.Quantity }}</td>
+                <td>{{ item.List_Price }}</td>
+                <td>{{ item.Category }}</td>
+                
+                <td>
+                    <a href="{% url 'product-add' item.pk %}" class="btn btn=sm" role="button"><i class="fas fa-plus"></i></a>
+                </td>
+                <td>
+                    <a href="{% url 'product-delete' item.pk %}" class="btn btn=sm" role="button"><i class="fas fa-trash-alt"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="container">        
+        <div class="col-2 float-right mx-4"><a href="{% url 'purchase-add' %}" class="btn btn-primary btn-dark btn-md" role="button">Purchase New Product</a></div>
+        <div class="col-1 float-right "><a href="" class="btn btn-primary btn-dark" data-toggle="modal" data-target="#giignan" >ay pislita</button></a> 
+    </div>    
+
+    <div class="modal fade" id="giignan" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h1>GIINGNAN AYAW!</h1>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+
+
+{% endblock %}
