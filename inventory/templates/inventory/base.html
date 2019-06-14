@@ -29,6 +29,7 @@
     {% endif %}
   </head>
   <body>
+    {% comment %} TOP NAVIGATION {% endcomment %}
 
     <div class="wrapper">
       <!-- Sidebar Holder -->
@@ -38,37 +39,38 @@
           
         </div>
 
-        <ul class="list-unstyled components">  
+        <ul class="list-unstyled components"> 
+          {% if user.is_authenticated %}
+            <li class="active">
+              <a href="{% url 'dashboard' %}"> <i class="fas fa-home nav-icn"></i> Dashboard</a>
 
-          <li class="active">
-            <a href="#"> <i class="fas fa-home nav-icn"></i> Dashboard</a>
+              <a href="#inventory-submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-prescription-bottle nav-icn"></i> Inventory</a>
+              <ul class="collapse list-unstyled" id="inventory-submenu">
+                <li>
+                  <a href="{% url 'product-list' %}">Product List</a>
+                </li>
+                <li>
+                  <a href="#">Purchase</a>
+                </li>
+                <li>
+                  <a href="{% url 'purchase-list' %}">Purchase List</a>
+                </li>
+                
+              </ul>
+            </li>
 
-            <a href="#inventory-submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fas fa-prescription-bottle nav-icn"></i> Inventory</a>
-            <ul class="collapse list-unstyled" id="inventory-submenu">
-              <li>
-                <a href="{% url 'product-list' %}">Product List</a>
-              </li>
-              <li>
-                <a href="#">Purchase</a>
-              </li>
-              <li>
-                <a href="{% url 'purchase-list' %}">Purchase List</a>
-              </li>
-              
-            </ul>
-          </li>
-
-          <li>            
-            <a href="#sales-submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> <i class="fas fa-cash-register nav-icn"></i> Sales</a>
-            <ul class="collapse list-unstyled" id="sales-submenu">
-              <li>
-                <a href="#">Sales</a>
-              </li>  
-              <li>
-                <a href="#">Report</a>
-              </li>
-            </ul>
-          </li>
+            <li>            
+              <a href="#sales-submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> <i class="fas fa-cash-register nav-icn"></i> Sales</a>
+              <ul class="collapse list-unstyled" id="sales-submenu">
+                <li>
+                  <a href="#">Sales</a>
+                </li>  
+                <li>
+                  <a href="#">Report</a>
+                </li>
+              </ul>
+            </li>
+          {% endif %}
 
           
         </ul>
@@ -94,20 +96,30 @@
                       <span></span>
                       <span></span>
                   </button>
+                  
                   <h2 class="page-title">{{ title }}</h2>
                   <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                       <svg class="svg-inline--fa fa-align-justify fa-w-14" aria-hidden="true" data-prefix="fas" data-icon="align-justify" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M0 84V44c0-8.837 7.163-16 16-16h416c8.837 0 16 7.163 16 16v40c0 8.837-7.163 16-16 16H16c-8.837 0-16-7.163-16-16zm16 144h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 256h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0-128h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path></svg><!-- <i class="fas fa-align-justify"></i> -->
                   </button>
 
+                  {% comment %} TOP NAVIGATION {% endcomment %}
                   <div class="collapse navbar-collapse" id="navbarSupportedContent">
                       <ul class="nav navbar-nav ml-auto">
-                          <li class="nav-item active">
-                              <a class="nav-link" href="#">{{ user.get_full_name }} </a>
-                          </li>
-                          <li class="nav-item">
-                              <a class="nav-link" href="#">Logout</a>
-                          </li>
-                          
+                          {% if user.is_authenticated %}
+                            <li class="nav-item">
+                            <a class="nav-link" id="time-nav"></a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                            </li>                
+                          {% else %}
+                              <li class="nav-item">
+                              <a class="nav-link" href="{% url 'login'%}">Login</a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="#">Sign Up</a>
+                              </li>
+                          {% endif %}                       
                       </ul>
                   </div>
               </div>
@@ -134,6 +146,21 @@
                 $('#sidebar').toggleClass('active');
                 $(this).toggleClass('active');
             });
+
+            function getdate(){
+              var today = new Date();
+              var h = today.getHours();
+              var m = today.getMinutes();
+              var s = today.getSeconds();
+              if(s<10){
+                  s = "0"+s;
+              }
+
+              $("#time-nav").text(h+" : "+m+" : "+s);
+              setTimeout(function(){getdate()}, 500);
+              }
+          
+            setInterval(getdate());
         });
     </script>
 

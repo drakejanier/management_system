@@ -1,0 +1,59 @@
+{% extends 'inventory/base.html' %}
+
+{% block body %}
+<div class="card col-md-5 p-0 mx-auto">
+    <div class="card-header"> Purchases Today </div>
+
+    <div class="card-body p-2">
+        <table class="table table-hover table-bordered table-sm col-sm-6 " id="dash-tables" font- >
+            <thead class="thead-dark tbl-head col-sm-6">
+                <th >Item</th>
+                <th >Quantity</th>
+                <th >Cost</th>
+                <th >User</th>        
+            </thead>
+
+            <tbody>
+                {% for item in purchases %}            
+                <tr>
+                    <td>{{ item.Item }}</td>
+                    <td>{{ item.Quantity }}</td>
+                    <td>{{ item.Total_Cost }}</td>
+                    <td>{{ item.User }}</td>               
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="col-sm-12 float-right">
+            <span class="float-right">Total Purchases: <strong>{{ total_purchases }}</strong></span>                
+        </div>   
+    </div>
+    
+    <div class="card-footer text-muted">
+        <div class="col-sm-3 float-right">
+            <a href="{% url 'purchase-list' %}" 
+                class="btn btn-info btn-sm " 
+                role="button" 
+                data-toggle="tooltip" data-placement="right" 
+                title="View Purchase List">
+                Purchase
+            </a>
+        </div>
+        
+        <div class="col-sm-4 float-right">
+            <a href="{% url 'purchase-list' %}" 
+                class="btn btn-outline-info btn-sm " 
+                role="button" 
+                data-toggle="tooltip" data-placement="right" 
+                title="View Purchase List">
+                View Purchases
+            </a>
+        </div>
+        
+
+    </div>
+</div>    
+    
+    
+</div>
+{% endblock %}

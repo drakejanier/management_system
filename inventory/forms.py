@@ -6,11 +6,10 @@ class ProductForm(forms.ModelForm):
         model = Products
         fields = ['Name', 'Unit', 'Quantity', 'List_Price', 'Category']
         
-class PurchaseForm(forms.ModelForm):
-    
+class PurchaseForm(forms.ModelForm):    
     class Meta:
         model = Purchase
-        fields = ('Supplier','Cost', 'Total_Cost')
+        fields = ('Item', 'Supplier', 'Quantity','Cost', 'Total_Cost')
         
     # def __str__(self)
 

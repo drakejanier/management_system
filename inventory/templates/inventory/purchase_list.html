@@ -15,7 +15,11 @@
             <th>Quantity</th>
             <th>Cost</th>
             <th>Date</th>  
-            <th>User</th>        
+            <th>User</th>
+            {% if request.user.is_superuser %}
+                <th>User</th>
+            {% endif %}    
+
         </thead>
 
         <tbody>
@@ -28,7 +32,12 @@
                 <td>{{ item.Quantity }}</td>
                 <td>{{ item.Cost }}</td>
                 <td>{{ item.Date_Purchased }}</td>
-                <td>{{ item.User }}</td>               
+                <td>{{ item.User }}</td>                
+                {% if request.user.is_superuser %}
+                    <td>
+                        <a href="{% url 'purchase-delete' item.pk %}" class="btn btn=sm" role="button"><i class="fas fa-trash-alt"></i></a>
+                    </td>
+                {% endif %}        
                 
             </tr>
             {% endfor %}

@@ -1,18 +1,35 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Products, Category, Purchase
+from django.db.models import Avg, Count, Min, Sum
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView,TemplateView
 from django.views.generic.edit import FormView
+from django.urls import reverse
 from .forms import PurchaseForm, ProductForm
+from datetime import datetime, date
 
 # Create your views here.
+
 def home(request):
-    context = {                
-        'title': 'Home',
-    }
-    return render(request, 'inventory/base.html', context)
+  
+    
+    if request.user.is_authenticated:
+        purchases_today = Purchase.objects.filter(Date_Purchased__date=date.today())
+
+        
+        context = { 
+            'purchases' : purchases_today,
+            'total_purchases': purchases_today.aggregate(Sum('Total_Cost'))['Total_Cost__sum'] or 0.00,
+            'title': 'Home', 
+            }
+        
+        return render(request, 'inventory/dashboard.html', context)
+    else:
+        return redirect('login')
+    
+    
 
 def ProductView(request):
     items = Products.objects.all()
@@ -54,16 +71,41 @@ def PurchaseView(request, pk): #TEMPORARY DELETE AFTER 0623
     
     return render(request, 'inventory/purchase.html', {'form':form})
 
-class PurchaseAdd(CreateView): #CHECK IF TEMP
-    model = Purchase
-    # form = PurchaseForm
-    fields = ['Item', 'Supplier', 'Quantity', 'Cost', 'Date_Purchased']
-    # template_Name = 'inventory/purchase.html'
+def PurchaseAdd(request, pk):
+    product_item = get_object_or_404(Products, pk=pk) #get form Item model with primary key    
+    item_data = {'Item' : product_item}
     
     
-    def form_valid(self, form): #overide the form valid method
-        form.instance.user = self.request.user.id
-        return super().form_valid(form)
+    if request.method == "POST":
+        form = PurchaseForm(request.POST)     
+        purchase_qty = form['Quantity'].value()
+        
+        print("purcahse qty : " + purchase_qty)
+        
+        if form.is_valid():
+            product_item = Products.objects.get(pk = pk)
+            old_qty = product_item.Quantity
+            
+            new_qty = int(old_qty) + int(purchase_qty)
+            print("new qty : " + str(new_qty))
+            
+            product_item.Quantity = new_qty
+            
+            
+            
+            product_item.save()
+            print("product updated")
+            
+            form.save()
+            
+            return redirect('product-list')
+
+    else: #IF GET
+        purchase_form = PurchaseForm(initial=item_data)
+        context  = {
+            'purchase_form': purchase_form,            
+        }
+        return render(request, 'inventory/purchase_add.html', context)
 
 def PurchaseNewItem(request):
     
@@ -71,26 +113,19 @@ def PurchaseNewItem(request):
         product_form = ProductForm(request.POST)
         purchase_form = PurchaseForm(request.POST)
         user_reg = 'jerome'
-        print(product_form.errors)
-        
-        
-        
-            
+
         if product_form.is_valid() and purchase_form.is_valid():
-            print("2")
-            
+
             added_qty = product_form['Quantity'].value()
             #product_form.User = 'jerome'
             added_product = product_form.save()
-            print("3")
-            
+
             item_pk = added_product.pk
             product_item = Products.objects.get(pk = item_pk)
             
-            print("4")
             add_purchase = purchase_form.save(commit=False)
             add_purchase.Item = product_item
-            print(product_item)
+
             add_purchase.Quantity = added_qty
             add_purchase.save()
             
@@ -120,4 +155,10 @@ def ProductDelete(request, pk):
     
     return redirect('product-list')
     messages.success(request, f'Deleted.')   
+
+def PurchaseDelete(request, pk):
+    item = Purchase.objects.only('Item').get(pk=pk).Item
+    Purchase.objects.filter(id=pk).delete()
     
+    return redirect('purchase-list')
+    messages.success(request, f'Deleted.')   
