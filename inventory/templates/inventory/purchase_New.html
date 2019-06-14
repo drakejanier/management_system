@@ -2,9 +2,9 @@
 {% load crispy_forms_tags %}
 
 {% block body %}
-<div class="card content-card col-md-10 mx-auto">
-    <div class="container ">
-        <form action="" method="POST" enctype="multipart/form-data">
+<div class="card content-card col-md-10 mx-auto fade-up p-0">
+    <div class="card-header bg-dark text-white ">{{ title }}</div>
+    <form action="" method="POST" enctype="multipart/form-data">
 
             {% csrf_token %}
 
@@ -48,10 +48,10 @@
             
             </div>
             
-
-            <button type="submit" class="btn btn-primary" name="button">Add New Product</button>
+            <div class="card-footer text-right">
+                <button type="submit" class="btn btn-primary" name="button">Add New Product</button>
+            </div>
         </form>
-    </div>
 </div>
 
 <script>

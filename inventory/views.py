@@ -76,8 +76,7 @@ class SearchProducts(ListView):
         elif search_unit:
             return Products.objects.filter(Unit__icontains=search_unit)
         else:
-            messages.info(self.request, f'Items not found')     
-           
+            messages.info(self.request, f'')           
             return Products.objects.all()
 
 class PurchasesListView(ListView):
