@@ -1,14 +1,42 @@
 {% extends 'inventory/base.html' %}
+{% load crispy_forms_tags %}
 
 {% block body %}
-<div class="card content-card">
-    <div class="button-group">    
+
+<div class="card content-card col-md-12 mx-auto p-0">
+    <form action="" method="GET" >
+
+        {% csrf_token %}
+        {% comment %} PRODUCTS FORM {% endcomment %}
+        <div class="form-group col-md-12 mb-0">                
+            <div class="form-row mx-auto">
+                <div class="col-md-3 mb-0">                
+                    {{ search_form.Name|as_crispy_field }}
+                </div>
+                <div class=" col-md-3 mb-0">
+                    {{ search_form.Unit|as_crispy_field }}
+                </div>
+                <div class="col-md-3 mb-0">
+                    {{ search_form.Category|as_crispy_field }}
+                </div>
+                <div class="col-md-3 mb-0 mt-4" name="ButtonHolder">                
+                    <button type="submit" class="btn btn-primary col-md-12 mt-3" name="button">Search</button>   
+                </div>                
+            </div>            
+        </div>
+
+        {% comment %} <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Search</legend>
+                {{ search_form|crispy }}
+        </fieldset> {% endcomment %}
         
-        <a href="{% url 'product-list' %}" class="btn btn-outline-primary btn-md" rold="button">REFRESH</a>
-        
-    </div>
+    </form>
+</div>
+<div class="card content-card mt-3 fade-up">
+    <div class="card-header bg-dark text-white">{{ title }}</div>
+
     <table class="table table-hover" id="product-table">
-        <thead class="thead-dark tbl-head">
+        <thead>
             <th>ID</th>
             <th>Name</th>
             <th>Unit</th>
@@ -41,30 +69,9 @@
         </tbody>
     </table>
     
-    <div class="container">        
-        <div class="col-2 float-right mx-4"><a href="{% url 'purchase-add' %}" class="btn btn-primary btn-dark btn-md" role="button">Purchase New Product</a></div>
-        <div class="col-1 float-right "><a href="" class="btn btn-primary btn-dark" data-toggle="modal" data-target="#giignan" >ay pislita</button></a> 
-    </div>    
-
-    <div class="modal fade" id="giignan" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <h1>GIINGNAN AYAW!</h1>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div class="container text-right pb-3">        
+        <div class="mx-4"><a href="{% url 'purchase-add' %}" class="btn btn-primary btn-dark btn-md" role="button">Purchase New Product</a></div>
+    </div>        
 
     
 </div>

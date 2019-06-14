@@ -2,8 +2,9 @@
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
 /* CUSTOM STYLES */
+
 .content-card{
-    padding:20px;
+    
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
 }
 .nav-icn{
@@ -22,20 +23,20 @@ h2{
     text-transform: uppercase;
 }
 
-th{
-    background-color:#2c2f31 !important;
-}
+
 
 /*
     Default STYLE
 */
 body {
     font-family: 'Roboto', sans-serif;
-    background: #fafafa;
+    background: #eeeded;
 }
 
-
-
+.fade-up{
+    opacity:0;
+    margin:100px;
+}
 p {
     font-family: 'Roboto', sans-serif;
     font-size: 1em;

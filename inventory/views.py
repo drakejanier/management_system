@@ -7,14 +7,12 @@ from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView,TemplateView
 from django.views.generic.edit import FormView
 from django.urls import reverse
-from .forms import PurchaseForm, ProductForm
+from .forms import PurchaseForm, ProductForm, ProductFilterForm
 from datetime import datetime, date
 
 # Create your views here.
 
 def home(request):
-  
-    
     if request.user.is_authenticated:
         purchases_today = Purchase.objects.filter(Date_Purchased__date=date.today())
 
@@ -29,22 +27,65 @@ def home(request):
     else:
         return redirect('login')
     
-    
 
-def ProductView(request):
+
+def ProductView(request): #TEMP GETTING OBSOLETE
     items = Products.objects.all()
+    search_form = ProductFilterForm()
+    
     context = {
         'items' : items,
-        'title': 'Product List'        
+        'title': 'Product List',
+        'search_form':search_form,
     }
 
     return render(request, 'inventory/inventory.html', context)
+
+class SearchProducts(ListView):
+    template_name = 'inventory/inventory.html'    
+    model = Products
+    context_object_name = 'items'
+    
+    def get_context_data(self, **kwargs):
+        search_form = ProductFilterForm()        
+        
+        context = super(SearchProducts, self).get_context_data(**kwargs)        
+        context.update({    
+            'title': 'Product List',
+            'search_form':search_form,
+        })
+        return context
+    
+    def get_queryset(self):
+        category_pk = self.request.GET.get('Category')
+        search_name = self.request.GET.get('Name')
+        search_unit = self.request.GET.get('Unit')
+        
+        if search_name and search_unit and category_pk:
+            return Products.objects.filter(Name__icontains=search_name, Unit__icontains=search_unit, Category=category_pk)
+        elif search_name and search_unit:
+            return Products.objects.filter(Name__icontains=search_name, Unit__icontains=search_unit)
+        elif search_name and category_pk:
+            return Products.objects.filter(Name__icontains=search_name, Category=category_pk)
+        elif search_unit and category_pk:
+            return Products.objects.filter(Unit__icontains=search_unit, Category=category_pk)
+        elif category_pk:
+            return Products.objects.filter(Category=category_pk)
+        elif search_name:
+            return Products.objects.filter(Name__icontains=search_name)
+        elif search_unit:
+            return Products.objects.filter(Unit__icontains=search_unit)
+        else:
+            messages.info(self.request, f'Items not found')     
+           
+            return Products.objects.all()
 
 class PurchasesListView(ListView):
     model = Purchase
     queryset = Purchase.objects.order_by('-Date_Purchased')
     template_name = 'inventory/purchase-list.html'
-    context_object_name = 'purchases'
+    context_object_name = 'purchases'    
+    
     
 def PurchaseView(request, pk): #TEMPORARY DELETE AFTER 0623
     p_item = get_object_or_404(Purchase, pk=pk)    
@@ -72,8 +113,12 @@ def PurchaseView(request, pk): #TEMPORARY DELETE AFTER 0623
     return render(request, 'inventory/purchase.html', {'form':form})
 
 def PurchaseAdd(request, pk):
-    product_item = get_object_or_404(Products, pk=pk) #get form Item model with primary key    
-    item_data = {'Item' : product_item}
+    if pk==0:
+        item_data = {}
+        
+    else:
+        product_item = get_object_or_404(Products, pk=pk) #get form Item model with primary key    
+        item_data = {'Item' : product_item}
     
     
     if request.method == "POST":
@@ -103,7 +148,8 @@ def PurchaseAdd(request, pk):
     else: #IF GET
         purchase_form = PurchaseForm(initial=item_data)
         context  = {
-            'purchase_form': purchase_form,            
+            'purchase_form': purchase_form,
+            'title' : 'Purchase'     
         }
         return render(request, 'inventory/purchase_add.html', context)
 

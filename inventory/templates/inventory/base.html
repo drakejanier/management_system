@@ -35,7 +35,7 @@
       <!-- Sidebar Holder -->
       <nav id="sidebar">
         <div class="sidebar-header">
-          <h3><i class="fas fa-paw"></i> Laugo</h3>
+          <h3><i class="fas fa-paw"></i> Clinic</h3>
           
         </div>
 
@@ -50,7 +50,7 @@
                   <a href="{% url 'product-list' %}">Product List</a>
                 </li>
                 <li>
-                  <a href="#">Purchase</a>
+                  <a href="{% url 'product-add' 0 %}">Purchase</a>
                 </li>
                 <li>
                   <a href="{% url 'purchase-list' %}">Purchase List</a>
@@ -97,7 +97,14 @@
                       <span></span>
                   </button>
                   
-                  <h2 class="page-title">{{ title }}</h2>
+                  {% if messages %}
+                      {% for message in messages %}
+                          <div class="alert alert-{{ message.tags }}">
+                              {{ message }}
+                          </div>
+                      {% endfor %}
+                  {% endif %}
+
                   <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                       <svg class="svg-inline--fa fa-align-justify fa-w-14" aria-hidden="true" data-prefix="fas" data-icon="align-justify" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M0 84V44c0-8.837 7.163-16 16-16h416c8.837 0 16 7.163 16 16v40c0 8.837-7.163 16-16 16H16c-8.837 0-16-7.163-16-16zm16 144h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 256h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0-128h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path></svg><!-- <i class="fas fa-align-justify"></i> -->
                   </button>
@@ -139,7 +146,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-
+    {% comment %} JQuery {% endcomment %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>  
     <script type="text/javascript">
         $(document).ready(function () {
             $('#sidebarCollapse').on('click', function () {
@@ -160,7 +168,9 @@
               setTimeout(function(){getdate()}, 500);
               }
           
-            setInterval(getdate());
+            setInterval(getdate()); 
+
+            $('.fade-up').delay(50).animate({'marginTop':'+=-100px','opacity':'1'},300);
         });
     </script>
 
