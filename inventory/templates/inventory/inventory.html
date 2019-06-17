@@ -59,7 +59,7 @@
                 <td>{{ item.Category }}</td>
                 
                 <td>
-                    <a href="{% url 'product-add' item.pk %}" class="btn btn=sm" role="button"><i class="fas fa-plus"></i></a>
+                    <a href="{% url 'purchase-view' %}" class="btn btn=sm" role="button"><i class="fas fa-plus"></i></a>
                 </td>
                 <td>
                     <a href="{% url 'product-delete' item.pk %}" class="btn btn=sm" role="button"><i class="fas fa-trash-alt"></i></a>
@@ -70,7 +70,7 @@
     </table>
     
     <div class="container text-right pb-3">        
-        <div class="mx-4"><a href="{% url 'purchase-add' %}" class="btn btn-primary btn-md" role="button">Purchase New Product</a></div>
+        <div class="mx-4"><a href="{% url 'product-new' %}" class="btn btn-primary btn-md" role="button">Purchase New Product</a></div>
     </div>        
 
     

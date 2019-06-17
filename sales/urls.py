@@ -3,5 +3,6 @@ from .views import *
 from . import views
 
 urlpatterns = [
-    path('sales/', SalesViewSolo.as_view(), name='sales-view'),
+    path('register/', views.SalesView, name='sales-register'),
+    # url(r'^items-autocomplete/$', getItemList.as_view(), name='items-autocomplete',), #move to inventory
 ]

@@ -14,14 +14,26 @@
             </thead>
 
             <tbody>
-                {% for item in purchases %}            
-                <tr>
-                    <td>{{ item.Item }}</td>
-                    <td>{{ item.Quantity }}</td>
-                    <td>{{ item.Total_Cost }}</td>
-                    <td>{{ item.User }}</td>               
-                </tr>
-                {% endfor %}
+                {% if purchases.item %}
+                    {% for item in purchases %}            
+                        <tr>
+                            <td>{{ item.Item }}</td>
+                            <td>{{ item.Quantity }}</td>
+                            <td>{{ item.Total_Cost }}</td>
+                            <td>{{ item.User }}</td>               
+                        </tr>
+                    {% endfor %}
+                {% else %}
+
+                    <tr>
+                        <td col-sm-3>&nbsp;</td>
+                        <td col-sm-3>&nbsp;</td>
+                        <td col-sm-3>&nbsp;</td>
+                        <td col-sm-3>&nbsp;</td>               
+                    </tr>
+                        
+
+                {% endif %}
             </tbody>
         </table>
         <div class="col-sm-12 float-right">
@@ -32,7 +44,7 @@
     <div class="card-footer text-muted">
         <div class="row text-right">
             <div class="col-sm-3">
-                <a href="{% url 'product-add' 0 %}" 
+                <a href="{% url 'purchase-view' %}" 
                     class="btn btn-info btn-sm " 
                     role="button" 
                     data-toggle="tooltip" data-placement="right" 

@@ -1,3 +1,4 @@
+from dal import autocomplete
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Products, Category, Purchase
 from django.db.models import Avg, Count, Min, Sum
@@ -85,72 +86,25 @@ class PurchasesListView(ListView):
     template_name = 'inventory/purchase-list.html'
     context_object_name = 'purchases'    
     
-    
-def PurchaseView(request, pk): #TEMPORARY DELETE AFTER 0623
-    p_item = get_object_or_404(Purchase, pk=pk)    
-    form = PurchaseForm(instance=p_item)
-    
-    if request.method == 'POST':
-        p_item = get_object_or_404(Purchase, pk=pk)
-        form = PurchaseForm(request.POST)
-        
-        if form.is_valid():
-            item = form.cleaned_data.get('Item')
-            supplier = form.cleaned_data.get('Supplier')
-            quantity = form.cleaned_data.get('Quantity')
-            cost = form.cleaned_data.get('Cost')
-            date_Purchased = form.cleaned_data.get('Date_Purchased')
-            
-            p_item.Item = item
-            p_item.Supplier = supplier
-            p_item.Quantity = quantity
-            p_item.Cost = item
-            p_item.Date_Purchased = item
-            
-            return redirect('product-list')
-    
-    return render(request, 'inventory/purchase.html', {'form':form})
+def PurchaseView(request): #if Purchase is clicked
+    context = {
+        'purchase_form' : PurchaseForm(),
+        'title' : 'ADD NEW PRODUCT',
+    }    
+    return render (request, 'inventory/purchase_add.html', context)
 
-def PurchaseAdd(request, pk):
-    if pk==0:
-        item_data = {}
-        
-    else:
-        product_item = get_object_or_404(Products, pk=pk) #get form Item model with primary key    
-        item_data = {'Item' : product_item}
-    
-    
-    if request.method == "POST":
-        form = PurchaseForm(request.POST)     
-        purchase_qty = form['Quantity'].value()
-        
-        print("purcahse qty : " + purchase_qty)
-        
-        if form.is_valid():
-            product_item = Products.objects.get(pk = pk)
-            old_qty = product_item.Quantity
-            
-            new_qty = int(old_qty) + int(purchase_qty)
-            print("new qty : " + str(new_qty))
-            
-            product_item.Quantity = new_qty
-            
-            
-            
-            product_item.save()
-            print("product updated")
-            
-            form.save()
-            
-            return redirect('product-list')
 
-    else: #IF GET
-        purchase_form = PurchaseForm(initial=item_data)
-        context  = {
-            'purchase_form': purchase_form,
-            'title' : 'Purchase'     
-        }
-        return render(request, 'inventory/purchase_add.html', context)
+# def PurchaseViewItem(request, pk): #Purchase with item
+#     product_item = get_object_or_404(Products, pk=pk)  #get item
+#     item_data = {'Item' : product_item}
+#     purchase_form = PurchaseForm(initial=item_data)  
+    
+#     context = {         
+#         'purchase_form' : PurchaseForm(),
+#         'title' : 'ADD NEW PRODUCT',
+#     }     
+#     return render (request, 'inventory/purchase_add.html', context)
+
 
 def PurchaseNewItem(request):
     
@@ -206,4 +160,12 @@ def PurchaseDelete(request, pk):
     Purchase.objects.filter(id=pk).delete()
     
     return redirect('purchase-list')
-    messages.success(request, f'Deleted.')   
+    messages.success(request, f'Deleted.')  
+    
+class getItemList(autocomplete.Select2QuerySetView):
+    
+    def get_queryset(self):
+        
+        if self.q:
+            items = Products.objects.filter(Name__istartswith=self.q)
+        return items

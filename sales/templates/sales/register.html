@@ -1,0 +1,56 @@
+{% extends 'inventory/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+<div class="card content-card col-md-4 mx-auto p-0 fade-up">
+    <div class="card-header bg-dark text-white ">{{ title }}</div>
+    
+    <form action="" method="POST" >
+
+        {% csrf_token %}
+        {% comment %} PRODUCTS FORM {% endcomment %}
+        <div class="form-group col-md-12 mb-0">
+            {{ sales_form.media }}
+            
+            <div class="form-group col-md-12 mb-0">                
+                <div class="form-group col-md-12 mb-0 mt-2">
+                    {{ sales_form.Items|as_crispy_field }}
+                </div>                                   
+                
+                <div class="form-group col-md-12 mb-0">
+                    {{ sales_form.Customer|as_crispy_field }}
+                </div>     
+                <div class="form-row mx-auto">
+                    <div class="col-md-4 mb-0">
+                        {{ sales_form.Quantity|as_crispy_field }}
+                    </div>
+                    <div class=" col-md-4 mb-0">
+                        {{ sales_form.List_Price|as_crispy_field }}
+                    </div>
+                    <div class="col-md-4 mb-0">
+                        {{ sales_form.Total_Sales|as_crispy_field }}
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="card-footer text-right">
+            <a href="{% url 'product-new' %}" class="btn btn-outline-info btn-dark" role="button">Purchase New Product</a>
+            <button type="submit" class="btn btn-primary" name="button">Sell</button>                
+        </div>
+        
+    </form>
+
+    
+
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("[name='Quantity'],[name='Cost']").on("change keyup", function() {
+            $("[name='List_Price']").val(($("[name='Quantity']").val() * $("[name='Total_Sales']").val()))
+        });
+    });
+</script> 
+{% endblock %}

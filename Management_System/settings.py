@@ -35,7 +35,9 @@ INSTALLED_APPS = [
     'inventory.apps.InventoryConfig',
     'sales.apps.SalesConfig',
     'crispy_forms',
-
+    'dal', #dal for autocomplete
+    'dal_select2', #dal for autocomplete
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

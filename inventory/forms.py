@@ -2,6 +2,7 @@ from django import forms
 from .models import *
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit
+from dal import autocomplete
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -9,18 +10,22 @@ class ProductForm(forms.ModelForm):
         fields = ['Name', 'Unit', 'Quantity', 'List_Price', 'Category']
         
 class PurchaseForm(forms.ModelForm):    
+    Items = forms.ModelChoiceField( #check FIELD (Items)      
+        queryset=Products.objects.all(), #check MODEL
+        widget=autocomplete.ModelSelect2(url='items-autocomplete',attrs={'autocomplete':'off',}),        
+    )
+    
     class Meta:
         model = Purchase
-        fields = ('Item', 'Supplier', 'Quantity','Cost', 'Total_Cost')
+        fields = ('Supplier', 'Quantity','Cost', 'Total_Cost')
         
-    # def __str__(self)
     
 class ProductFilterForm(forms.ModelForm):
     class Meta:
         model = Products
         fields = ['Name', 'Unit', 'Category']
         
-    def __init__(self, *args, **kwargs):      
+    def __init__(self, *args, **kwargs):
         
         super(ProductFilterForm, self).__init__(*args, **kwargs)
         self.fields['Name'].required = False

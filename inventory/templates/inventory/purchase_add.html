@@ -9,14 +9,18 @@
 
         {% csrf_token %}
         {% comment %} PRODUCTS FORM {% endcomment %}
-        <div class="form-group col-md-12 mb-0">                
+        <div class="form-group col-md-12 mb-0">     
+            {{ purchase_form.media }}
+
             <div class="form-group col-md-12 mb-0">
-                {{ purchase_form.Item|as_crispy_field }}
+
+                {{ purchase_form.Items|as_crispy_field }} 
             </div>                                   
             
             <div class="form-group col-md-12 mb-0">
                 {{ purchase_form.Supplier|as_crispy_field }}
-            </div>     
+            </div>   
+            
             <div class="form-row mx-auto">
                 <div class="col-md-4 mb-0">
                     {{ purchase_form.Quantity|as_crispy_field }}
@@ -28,10 +32,11 @@
                     {{ purchase_form.Total_Cost|as_crispy_field }}
                 </div>
             </div>
+            
         </div>
 
         <div class="card-footer text-right">
-            <a href="{% url 'purchase-add' %}" class="btn btn-outline-info btn-dark" role="button">Purchase New Product</a>
+            <a href="{% url 'product-new' %}" class="btn btn-outline-info btn-dark" role="button">Purchase New Product</a>
             <button type="submit" class="btn btn-primary" name="button">Pruchase</button>                
         </div>
         
@@ -46,6 +51,14 @@
     $("[name='Quantity'],[name='Cost']").on("change keyup", function() {
         $("[name='Total_Cost']").val(($("[name='Quantity']").val() * $("[name='Cost']").val()))
     });
+    });
+
+    $('#dynamic_select').on('change', function () {
+        var url = $(this).val(); // get selected value
+        if (url) { // require a URL
+              window.location = url; // redirect
+            }
+        return false;
     });
 </script>
 {% endblock %}

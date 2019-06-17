@@ -14,6 +14,7 @@
 
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
     
     <link rel="stylesheet" type="text/css" href="{% static '/css/main.css' %}">
 
@@ -50,7 +51,7 @@
                   <a href="{% url 'product-list' %}">Product List</a>
                 </li>
                 <li>
-                  <a href="{% url 'product-add' 0 %}">Purchase</a>
+                  <a href="{% url 'purchase-view'%}">Purchase</a>
                 </li>
                 <li>
                   <a href="{% url 'purchase-list' %}">Purchase List</a>
@@ -62,8 +63,8 @@
             <li>            
               <a href="#sales-submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> <i class="fas fa-cash-register nav-icn"></i> Sales</a>
               <ul class="collapse list-unstyled" id="sales-submenu">
-                <li>
-                  <a href="#">Sales</a>
+                <li>                  
+                  <a href="{% url 'sales-register' %}">Sales</a>
                 </li>  
                 <li>
                   <a href="#">Report</a>
@@ -95,15 +96,8 @@
                       <span></span>
                       <span></span>
                       <span></span>
-                  </button>
+                  </button>               
                   
-                  {% if messages %}
-                      {% for message in messages %}
-                          <div class="alert alert-{{ message.tags }}">
-                              {{ message }}
-                          </div>
-                      {% endfor %}
-                  {% endif %}
 
                   <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                       <svg class="svg-inline--fa fa-align-justify fa-w-14" aria-hidden="true" data-prefix="fas" data-icon="align-justify" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M0 84V44c0-8.837 7.163-16 16-16h416c8.837 0 16 7.163 16 16v40c0 8.837-7.163 16-16 16H16c-8.837 0-16-7.163-16-16zm16 144h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 256h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0-128h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path></svg><!-- <i class="fas fa-align-justify"></i> -->
@@ -133,6 +127,13 @@
           </nav>
           
           <div>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
             {% block body %}            
             {% endblock %}
           </div>
