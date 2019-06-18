@@ -103,26 +103,23 @@ class PurchaseViewItem(CreateView): #Purchase with item
     
     def get_initial(self):
         product_item = get_object_or_404(Products, pk=self.kwargs['pk'])
+        
         return {
             'Items':product_item,
+            'Cost' : product_item.List_Price,
         }
         
     def form_valid(self, form):
-        product_item = get_object_or_404(Products, pk=self.kwargs['pk'])
-        old_qty = product_item.Quantity
+        form_pk = form.cleaned_data['Items']
+        print(f'form pk : {form_pk}')
+        product_item = form.cleaned_data['Items']
         
-        purchase_qty = self.request.POST.get('Items')
-        new_qty = int(old_qty) + int(purchase_qty)
+        Purchase = form.save(commit=False)
         
-        
-        product_item.Quantity = new_qty #overwrite old qty            
-        product_item.save() #save updated product
-        
-        #https://stackoverflow.com/questions/54847516/model-field-on-django-should-is-the-sum-of-other-model | try to do model
-            # ajaw na isave an qty sa Products itotal rkan dretso sa query
-        #https://stackoverflow.com/questions/45654433/not-null-constraint-failed-django-createview | FOR ERROR
-        #form.instance.Items = product_item
-        print("Product_item : " + str(product_item))
+        Purchase.Item = product_item
+        Purchase.User = self.request.user
+        Purchase.save()
+        messages.success(self.request,f'Item added. {product_item}')
         return super(PurchaseViewItem, self).form_valid(form)
     
 def PurchaseNewItem(request):
