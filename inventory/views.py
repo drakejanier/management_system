@@ -128,13 +128,13 @@ class PurchaseViewItem(CreateView): #Purchase with item
 def PurchaseNewItem(request):
     
     if request.method == 'POST':
+        #new item has been loaded
         product_form = ProductForm(request.POST)
         purchase_form = PurchaseForm(request.POST)
         user_reg = 'jerome'
 
         if product_form.is_valid() and purchase_form.is_valid():
-
-            added_qty = product_form['Quantity'].value()
+            
             #product_form.User = 'jerome'
             added_product = product_form.save()
 
