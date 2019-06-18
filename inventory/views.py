@@ -128,34 +128,23 @@ class PurchaseViewItem(CreateView): #Purchase with item
 def PurchaseNewItem(request):
     
     if request.method == 'POST':
+        print(f'posted')
         product_form = ProductForm(request.POST)
         purchase_form = PurchaseForm(request.POST)
-        user_reg = 'jerome'
-
-        if product_form.is_valid() and purchase_form.is_valid():
-
-            added_qty = product_form['Quantity'].value()
-            #product_form.User = 'jerome'
-            added_product = product_form.save()
-
-            item_pk = added_product.pk
-            product_item = Products.objects.get(pk = item_pk)
-            
-            add_purchase = purchase_form.save(commit=False)
-            add_purchase.Item = product_item
-
-            add_purchase.Quantity = added_qty
-            add_purchase.save()
-            
-            messages.success(request, f'Added new product.')            
-            return redirect('product-list')
         
-        else:
-            print("5")
-            messages.success(request, f'Added new product.')            
+        if product_form.is_valid() and purchase_form.is_valid():
+            product_item = product_form.save()            
+            Purchase = purchase_form.save(commit=False)
             
+            Purchase.Item = product_item
+            Purchase.save()
+            
+            messages.success(request, f'Saved {product_item}.')
+            return redirect('product-list')
+        else:
+            messages.error(request, f'Form validation error {purchase_form.errors}.')
     else:
-        print("6")
+        
         product_form = ProductForm()
         purchase_form = PurchaseForm()
         
@@ -163,8 +152,7 @@ def PurchaseNewItem(request):
         'product_form' : product_form,
         'purchase_form' : purchase_form,
         'title' : 'ADD NEW PRODUCT'
-    }
-    
+    }    
     return render (request, 'inventory/purchase_New.html', context)
 
 def ProductDelete(request, pk):

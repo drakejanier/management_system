@@ -12,7 +12,8 @@ class ProductForm(forms.ModelForm):
 class PurchaseForm(forms.ModelForm):    
     Items = forms.ModelChoiceField( #check FIELD (Items)      
         queryset=Products.objects.all(), #check MODEL
-        widget=autocomplete.ModelSelect2(url='items-autocomplete',attrs={'autocomplete':'off',}),        
+        required=False,
+        widget=autocomplete.ModelSelect2(url='items-autocomplete',attrs={'autocomplete':'off',}),
     )
     
     class Meta:
