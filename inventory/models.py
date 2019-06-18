@@ -10,7 +10,7 @@ from datetime import datetime
 class Products(models.Model):
     Name = models.CharField(max_length=50)
     Unit = models.CharField(max_length=50)
-    Quantity = models.IntegerField(default=0)
+    #Quantity = models.IntegerField(default=0)
     List_Price = models.DecimalField(max_digits=8, decimal_places=2)
     CategoryOpt = (
         ('food','Food'),

@@ -7,7 +7,7 @@ from dal import autocomplete
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Products
-        fields = ['Name', 'Unit', 'Quantity', 'List_Price', 'Category']
+        fields = ['Name', 'Unit', 'List_Price', 'Category']
         
 class PurchaseForm(forms.ModelForm):    
     Items = forms.ModelChoiceField( #check FIELD (Items)      
@@ -18,6 +18,11 @@ class PurchaseForm(forms.ModelForm):
     class Meta:
         model = Purchase
         fields = ('Supplier', 'Quantity','Cost', 'Total_Cost')
+        
+class PurchaseItemForm(forms.ModelForm):
+    class Meta:
+        model = Purchase
+        fields = ('Item', 'Supplier', 'Quantity','Cost', 'Total_Cost')
         
     
 class ProductFilterForm(forms.ModelForm):

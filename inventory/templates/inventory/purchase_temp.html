@@ -11,27 +11,7 @@
         {% comment %} PRODUCTS FORM {% endcomment %}
         <div class="form-group col-md-12 mb-0">     
             {{ form.media }}
-
-            <div class="form-group col-md-12 mb-0">
-
-                {{ form.Items|as_crispy_field }} 
-            </div>                                   
-            
-            <div class="form-group col-md-12 mb-0">
-                {{ form.Supplier|as_crispy_field }}
-            </div>   
-            
-            <div class="form-row mx-auto">
-                <div class="col-md-4 mb-0">
-                    {{ form.Quantity|as_crispy_field }}
-                </div>
-                <div class=" col-md-4 mb-0">
-                    {{ form.Cost|as_crispy_field }}
-                </div>
-                <div class="col-md-4 mb-0">
-                    {{ form.Total_Cost|as_crispy_field }}
-                </div>
-            </div>
+            {{ form.as_p}}
             
         </div>
 

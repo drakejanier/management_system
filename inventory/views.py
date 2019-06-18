@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView,TemplateView
 from django.views.generic.edit import FormView
 from django.urls import reverse
-from .forms import PurchaseForm, ProductForm, ProductFilterForm
+from .forms import PurchaseForm, ProductForm, ProductFilterForm,PurchaseItemForm
 from datetime import datetime, date
 
 # Create your views here.
@@ -88,24 +88,43 @@ class PurchasesListView(ListView):
     
 def PurchaseView(request): #if Purchase is clicked
     context = {
-        'purchase_form' : PurchaseForm(),
+        'form' : PurchaseForm(),
         'title' : 'ADD NEW PRODUCT',
     }    
     return render (request, 'inventory/purchase_add.html', context)
 
 
-# def PurchaseViewItem(request, pk): #Purchase with item
-#     product_item = get_object_or_404(Products, pk=pk)  #get item
-#     item_data = {'Item' : product_item}
-#     purchase_form = PurchaseForm(initial=item_data)  
+class PurchaseViewItem(CreateView): #Purchase with item
+    #model = Purchase
+    form_class = PurchaseForm
+    template_name = 'inventory/purchase_add.html' 
+    #context_data = 'purchase_form'
+    #print("pk : " + pk)
     
-#     context = {         
-#         'purchase_form' : PurchaseForm(),
-#         'title' : 'ADD NEW PRODUCT',
-#     }     
-#     return render (request, 'inventory/purchase_add.html', context)
-
-
+    def get_initial(self):
+        product_item = get_object_or_404(Products, pk=self.kwargs['pk'])
+        return {
+            'Items':product_item,
+        }
+        
+    def form_valid(self, form):
+        product_item = get_object_or_404(Products, pk=self.kwargs['pk'])
+        old_qty = product_item.Quantity
+        
+        purchase_qty = self.request.POST.get('Items')
+        new_qty = int(old_qty) + int(purchase_qty)
+        
+        
+        product_item.Quantity = new_qty #overwrite old qty            
+        product_item.save() #save updated product
+        
+        #https://stackoverflow.com/questions/54847516/model-field-on-django-should-is-the-sum-of-other-model | try to do model
+            # ajaw na isave an qty sa Products itotal rkan dretso sa query
+        #https://stackoverflow.com/questions/45654433/not-null-constraint-failed-django-createview | FOR ERROR
+        #form.instance.Items = product_item
+        print("Product_item : " + str(product_item))
+        return super(PurchaseViewItem, self).form_valid(form)
+    
 def PurchaseNewItem(request):
     
     if request.method == 'POST':
