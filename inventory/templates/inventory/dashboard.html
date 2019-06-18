@@ -14,26 +14,15 @@
             </thead>
 
             <tbody>
-                {% if purchases.item %}
-                    {% for item in purchases %}            
-                        <tr>
-                            <td>{{ item.Item }}</td>
-                            <td>{{ item.Quantity }}</td>
-                            <td>{{ item.Total_Cost }}</td>
-                            <td>{{ item.User }}</td>               
-                        </tr>
-                    {% endfor %}
-                {% else %}
-
+                {% for item in purchases %}            
                     <tr>
-                        <td col-sm-3>&nbsp;</td>
-                        <td col-sm-3>&nbsp;</td>
-                        <td col-sm-3>&nbsp;</td>
-                        <td col-sm-3>&nbsp;</td>               
+                        <td>{{ item.Item }}</td>
+                        <td>{{ item.Quantity }}</td>
+                        <td>{{ item.Total_Cost }}</td>
+                        <td>{{ item.User }}</td>               
                     </tr>
-                        
-
-                {% endif %}
+                {% endfor %}
+                
             </tbody>
         </table>
         <div class="col-sm-12 float-right">

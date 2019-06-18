@@ -15,9 +15,9 @@ from datetime import datetime, date
 
 def home(request):
     if request.user.is_authenticated:
-        purchases_today = Purchase.objects.filter(Date_Purchased__date=date.today())
-
-        
+        messages.success(request, f'good')
+        purchases_today = Purchase.objects.filter(Date_Purchased__date=date.today())        
+        print(purchases_today.count())
         context = { 
             'purchases' : purchases_today,
             'total_purchases': purchases_today.aggregate(Sum('Total_Cost'))['Total_Cost__sum'] or 0.00,
