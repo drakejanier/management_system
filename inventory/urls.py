@@ -12,7 +12,7 @@ urlpatterns = [
     # path('productlist/', views.ProductView, name='product-list'), #leave blank to make as homepage
     path('productlist/', SearchProducts.as_view(), name='product-list'),    
     # path('purchase-add/', PurchaseAdd.as_view(), name='purchase-add'),    
-    path('product-new/', views.PurchaseNewItem, name='product-new'),
+    path('product-new/', PurchaseNewItem.as_view(), name='product-new'),
     #path('product-add/<int:pk>/', views.PurchaseView, name='product-add'),
     path('product-delete/<int:pk>/', views.ProductDelete, name='product-delete'),
 

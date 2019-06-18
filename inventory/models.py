@@ -55,7 +55,7 @@ class Supplier(models.Model):
         return self.Name
     
 class Purchase(models.Model):
-    Item = models.ForeignKey(Products, on_delete=models.CASCADE)
+    Item = models.ForeignKey(Products, on_delete=models.CASCADE, null=True)
     Supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
     Quantity = models.IntegerField(default=0)
     Cost = models.DecimalField(max_digits=6, decimal_places=2, default=0)

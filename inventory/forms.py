@@ -10,19 +10,19 @@ class ProductForm(forms.ModelForm):
         fields = ['Name', 'Unit', 'List_Price', 'Category']
         
 class PurchaseForm(forms.ModelForm):    
-    Items = forms.ModelChoiceField( #check FIELD (Items)      
+    Items = forms.ModelChoiceField( #check FIELD (Items)        
         queryset=Products.objects.all(), #check MODEL
+        required = False,
         widget=autocomplete.ModelSelect2(url='items-autocomplete',attrs={'autocomplete':'off',}),        
-    )
-    
+    )    
     class Meta:
         model = Purchase
         fields = ('Supplier', 'Quantity','Cost', 'Total_Cost')
         
-class PurchaseItemForm(forms.ModelForm):
+class PurchaseNewItemForm(forms.ModelForm):
     class Meta:
         model = Purchase
-        fields = ('Item', 'Supplier', 'Quantity','Cost', 'Total_Cost')
+        fields = ('Supplier', 'Quantity','Cost', 'Total_Cost')
         
     
 class ProductFilterForm(forms.ModelForm):

@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView,TemplateView
 from django.views.generic.edit import FormView
 from django.urls import reverse
-from .forms import PurchaseForm, ProductForm, ProductFilterForm,PurchaseItemForm
+from .forms import PurchaseForm, ProductForm, ProductFilterForm,PurchaseNewItemForm
 from datetime import datetime, date
 
 # Create your views here.
@@ -124,49 +124,19 @@ class PurchaseViewItem(CreateView): #Purchase with item
         #form.instance.Items = product_item
         print("Product_item : " + str(product_item))
         return super(PurchaseViewItem, self).form_valid(form)
+
+
+class PurchaseNewItem(FormView):
+    template_name= 'inventory/purchase_New.html'
     
-def PurchaseNewItem(request):
+    def get_context_data(self, **kwargs):
+        context = super(PurchaseNewItem, self).get_context_data(**kwargs)
+        context['product_form'] = ProductForm()
+        context['purchase_form'] = PurchaseForm()
+        return context
     
-    if request.method == 'POST':
-        #new item has been loaded
-        product_form = ProductForm(request.POST)
-        purchase_form = PurchaseForm(request.POST)
-        user_reg = 'jerome'
-
-        if product_form.is_valid() and purchase_form.is_valid():
-            
-            #product_form.User = 'jerome'
-            added_product = product_form.save()
-
-            item_pk = added_product.pk
-            product_item = Products.objects.get(pk = item_pk)
-            
-            add_purchase = purchase_form.save(commit=False)
-            add_purchase.Item = product_item
-
-            add_purchase.Quantity = added_qty
-            add_purchase.save()
-            
-            messages.success(request, f'Added new product.')            
-            return redirect('product-list')
-        
-        else:
-            print("5")
-            messages.success(request, f'Added new product.')            
-            
-    else:
-        print("6")
-        product_form = ProductForm()
-        purchase_form = PurchaseForm()
-        
-    context = {
-        'product_form' : product_form,
-        'purchase_form' : purchase_form,
-        'title' : 'ADD NEW PRODUCT'
-    }
     
-    return render (request, 'inventory/purchase_New.html', context)
-
+    
 def ProductDelete(request, pk):
     item = Products.objects.only('Name').get(pk=pk).Name
     Products.objects.filter(id=pk).delete()
