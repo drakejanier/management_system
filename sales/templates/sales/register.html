@@ -2,48 +2,49 @@
 {% load crispy_forms_tags %}
 
 {% block body %}
-<div class="card content-card col-md-4 mx-auto p-0 fade-up">
+<div class="card content-card c-group col-md-12 mx-auto p-0 fade-up">
     <div class="card-header bg-dark text-white ">{{ title }}</div>
     
-    <form action="" method="POST" >
-
-        {% csrf_token %}
-        {% comment %} PRODUCTS FORM {% endcomment %}
-        <div class="form-group col-md-12 mb-0">
-            {{ sales_form.media }}
-            
-            <div class="form-group col-md-12 mb-0">                
-                <div class="form-group col-md-12 mb-0 mt-2">
-                    {{ sales_form.Items|as_crispy_field }}
-                </div>                                   
-                
-                <div class="form-group col-md-12 mb-0">
-                    {{ sales_form.Customer|as_crispy_field }}
-                </div>     
-                <div class="form-row mx-auto">
-                    <div class="col-md-4 mb-0">
-                        {{ sales_form.Quantity|as_crispy_field }}
-                    </div>
-                    <div class=" col-md-4 mb-0">
-                        {{ sales_form.List_Price|as_crispy_field }}
-                    </div>
-                    <div class="col-md-4 mb-0">
-                        {{ sales_form.Total_Sales|as_crispy_field }}
-                    </div>
-                </div>
-            </div>
-            
+    <div class="card m-3 p-2">
+        <form action="" method="POST">
+            <label for="Ref">Sales #</label>
+            <input type="number">
+            <label for="OR">OR #</label>
+            <input type="number">
+            <br>
+            <label for="Customer">Customer</label>
+            <input type="text">
+            <label for="date">Date</label>
+            <input type="date">
+        </form>
+    </div>
+    <div class="row col-md-12 mx-auto">
+        {% comment %} ITEM INFORMATION {% endcomment %}
+        <div class="card  col-md-4 p-0 mx-auto">
+            <div class="card-header"><h5>Item Search</h6></div>
+            <div class="card-content p-2">
+                <label for="Search">Search</label>
+                <input type="text" name="" id="">
+                <button>SEARCH</button>
+                <hr>            
+                <h5>Item Information</h5>
+                <p>new</p>
+            </div>   
         </div>
-
-        <div class="card-footer text-right">
-            <a href="{% url 'product-new' %}" class="btn btn-outline-info btn-dark" role="button">Purchase New Product</a>
-            <button type="submit" class="btn btn-primary" name="button">Sell</button>                
-        </div>
-        
-    </form>
-
-    
-
+        <div class="card  col-md-7 p-0 ml-2 mx-auto">
+            <div class="card-header"><h5>Order List</h6></div>
+            <table>
+                <thead>
+                    <th>Item</th>     
+                    <th>qty</th>  
+                    <th>Unit Price</th>
+                    <th>+</th>  
+                    <th>-</th>  
+                    <th>~</th>       
+                </thead>
+            </table>
+        </div>    
+    </div>
 </div>
 
 <script>

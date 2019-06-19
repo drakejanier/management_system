@@ -7,12 +7,11 @@ from dal import autocomplete
 from inventory.models import Products
 
 class SalesForm(forms.ModelForm):
-    Items = forms.ModelChoiceField( #check FIELD 
-        
+    Items = forms.ModelChoiceField( #check FIELD         
         queryset=Products.objects.all(), #check MODEL
         widget=autocomplete.ModelSelect2(url='items-autocomplete',attrs={'autocomplete':'off',})
     )
     
     class Meta:
         model = Sales
-        fields = ('Customer', 'Quantity', 'List_Price', 'Total_Sales')
+        fields = ('Customer', 'OR', 'Date_Sold', 'Total_Sales')

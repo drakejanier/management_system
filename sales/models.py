@@ -6,12 +6,11 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Sales(models.Model):
-    Item = models.ForeignKey(Products, on_delete=models.CASCADE)
+    OR =  models.IntegerField(default=0)
     Customer = models.CharField(max_length=50)
-    Quantity = models.IntegerField(default=0) #should be delete after sales list
-    List_Price = models.DecimalField(max_digits=6, decimal_places=2, default=0) #should be delete after sales list
     Total_Sales = models.IntegerField(default=0)
     Date_Sold = models.DateTimeField(default=datetime.now)
+    Date_Recorded = models.DateTimeField(default=datetime.now)
     User = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     
     def __str__(self):

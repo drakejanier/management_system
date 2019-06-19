@@ -14,24 +14,12 @@ class SalesViewSolo(CreateView): #TEMP check if SalesVIEW is working
     context_object_name = 'sales'
     
 def SalesView(request): #TEMPORARY DELETE AFTER 0623
-    sales_form = SalesForm()
-        
-    context  = {
-        'sales_form': sales_form,
-        'title' : 'Register Sales'     
-    }
-    return render(request, 'sales/register.html', context)
-    
-# class getItemList(autocomplete.Select2QuerySetView): #move to inventory for global
-#     print("CALLED")
-    
-#     def get_queryset(self):
-#         print("querried")
-        
-        
+    return render(request,'sales/register.html',{'title':'Sales Register'})
 
-#         if self.q:
-#             print("2")
-#             items = Products.objects.filter(Name__istartswith=self.q)
-#         return items
-
+    # sales_form = SalesForm()
+        
+    # context  = {
+    #     'sales_form': sales_form,
+    #     'title' : 'Register Sales'     
+    # }
+    # return render(request, 'sales/register.html', context)
