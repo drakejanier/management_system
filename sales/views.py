@@ -1,9 +1,11 @@
 
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView, FormView
+from django.views.generic import ListView, CreateView, FormView, View
+from django.urls import reverse_lazy
 from .models import Sales
 from inventory.models import Products
-from .forms import SalesForm
+from .forms import SalesForm,SalesListForm
+from shapeshifter.views import MultiFormView
 
 # Create your views here.
 
@@ -13,13 +15,14 @@ class SalesViewSolo(CreateView): #TEMP check if SalesVIEW is working
     form_class = SalesForm    
     context_object_name = 'sales'
     
-def SalesView(request): #TEMPORARY DELETE AFTER 0623
-    return render(request,'sales/register.html',{'title':'Sales Register'})
-
-    # sales_form = SalesForm()
+class SalesView(MultiFormView):
+    
+    def get(self, *args, **kwargs):
+        sales_form = SalesForm()
+        saleslist_form = SalesListForm()        
+        context = {
+            'sales_form' : sales_form,
+            'saleslist_form' : saleslist_form,
+        }
         
-    # context  = {
-    #     'sales_form': sales_form,
-    #     'title' : 'Register Sales'     
-    # }
-    # return render(request, 'sales/register.html', context)
+        return render(self.request, 'sales/register.html', context)
