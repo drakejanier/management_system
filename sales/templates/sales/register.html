@@ -44,10 +44,22 @@
                         </div>
                     </div>                    
                 </form>
+                <hr>
 
                 {% for item in added_item %}                
-                    {{ item }}
-                    <hr>
+                    {% comment %} {{ item }} {% endcomment %}                    
+                    <div class="card mx-3 my-1 p-2">
+                        <div class="row">
+                            <div class="col-sm-4">{{ item.Item }}</div>
+                            <div class="col-sm-2">{{ item.Quantity }}</div>
+                            <div class="col-sm-3">{{ item.get_total_item }}</div>
+                            <div class="col-sm-3">
+                                <a href="{% url 'list-item-delete' item.pk %}" class="btn btn=sm" role="button" name="delete-item" >
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>                            
+                        </div>                        
+                    </div>
                 {% endfor %}
             </div>
         </div>

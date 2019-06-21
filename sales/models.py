@@ -32,8 +32,8 @@ class SalesList(models.Model):
     
 class tempSalesList(models.Model):
     # SalesID = models.ForeignKey(Sales, on_delete=models.CASCADE)
-    Item = models.ForeignKey(Purchase, on_delete=models.CASCADE)
+    Item = models.ForeignKey(Purchase, on_delete=models.CASCADE, unique=True)
     Quantity = models.IntegerField(default=0)    
     
     def get_total_item(self):
-        return self.Quantity * self.Item.List_Price
+        return self.Quantity * self.Item.Cost

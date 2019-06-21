@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     path('register/', views.SalesView, name='sales-register'),
+    path('list-item-delete/<int:pk>/', views.ListItemDelete, name='list-item-delete'),
     # url(r'^items-autocomplete/$', getItemList.as_view(), name='items-autocomplete',), #move to inventory
 ]
