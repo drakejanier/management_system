@@ -1,6 +1,8 @@
 from django import forms
+from django.forms import Textarea, SelectDateWidget, DateField
 
 from .models import *
+from bootstrap_datepicker_plus import DatePickerInput
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit
 from dal import autocomplete
@@ -14,6 +16,9 @@ class SalesForm(forms.ModelForm):
         model = Sales
         fields = ('Customer', 'OR', 'Date_Sold', 'Total_Sales')        
         Date_Sold = forms.DateField( widget=forms.TextInput(attrs={'type': 'date'} ))   
+        widgets = {
+            'Date_Sold': DatePickerInput(format='%m/%d/%Y'),
+        }
 
 class SalesListForm(forms.ModelForm):
     Item = forms.ModelChoiceField( #check FIELD (Items)      

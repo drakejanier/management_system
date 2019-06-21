@@ -52,21 +52,26 @@
         {% comment %} SALES CARD {% endcomment %}
         <div class="card col-md-5 p-0"> 
             <div class="card-header ">Sales Info</div>
-            <div class="card-content p-3">
-                <form action="save-sales" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}                 
-                    <div class="form-row">
-                        <div class="col-md-6">{{ sales_form.Sales_ID|as_crispy_field }}</div>
-                        <div class="col-md-6">{{ sales_form.OR|as_crispy_field }}  </div>                        
-                    </div>
-                    <div class="form-row">
+            <form action="save-sales" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card-content p-3">                    
+                    {{ sales_form.media }}          
+                    <div class="form-row">                        
+                        <div class="col-md-4">{{ sales_form.OR|as_crispy_field }}  </div>     
                         <div class="col-md-6"> {{ sales_form.Date_Sold|as_crispy_field }} </div> 
                     </div>
+                    
                     <div class="form-row">
                         <div class="col-md-12"> {{ sales_form.Customer|as_crispy_field }} </div>   
                     </div>            
-                </form>
-            </div>
+                    <hr>
+                    <h6>Total products : <strong>{{ product_count }}</strong></h6>
+                    <h6>Total Price : <strong>P {{ total_quantity|floatformat:2 }}</strong></h6>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary  mt-2" name="button_register" value="Save">Register Sales</button>   
+                </div>
+            </form>
         </div>
 
     </div>       
@@ -78,7 +83,7 @@
             $("[name='List_Price']").val(($("[name='Quantity']").val() * $("[name='Total_Sales']").val()))
         });
         $("[name='Quantity']").attr({
-            "max" : 10,
+            "max" : 1000,
             "min" : 0
         });
     });

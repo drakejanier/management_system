@@ -1,10 +1,10 @@
 
 from django.contrib import messages
-from django.db.models import F
+from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, CreateView, FormView, View
 from django.urls import reverse_lazy
-from .models import Sales, tempSalesList
+from .models import Sales, tempSalesList, SalesList
 from inventory.models import Products, Purchase
 from .forms import SalesForm,SalesListForm
 from shapeshifter.views import MultiFormView
@@ -21,14 +21,20 @@ def SalesView(request):
     sales_form = SalesForm()
     saleslist_form = SalesListForm()
     added_item = tempSalesList.objects.all()
+    product_count = tempSalesList.objects.count()
+    qty = tempSalesList.objects.all().aggregate(total_qty=Sum('Quantity'))
+    total_qty = qty.get('total_qty')
+    
     context = {
         'sales_form' : sales_form,
         'saleslist_form' : saleslist_form,
-        'added_item' : added_item,        
+        'added_item' : added_item,
+        'product_count' : product_count,
+        'total_quantity' : total_qty,
     }
     
     if request.method == 'POST': #IF POSTED
-        if request.POST.get("button_add"):
+        if request.POST.get("button_add"): #if button ADD is called
             temp_saleslist = SalesListForm(request.POST)          
             
             if temp_saleslist.is_valid():    #IF VALID  
@@ -38,7 +44,7 @@ def SalesView(request):
                 
                 if frm_qty > 0 and frm_qty <= item_qty : #if 0 
                     
-                    temp_saleslist.save() # << SUCCESS HERE
+                    temp_saleslist.save() # << item add SUCCESS HERE
                     messages.success(request, "added")   
                     return redirect('sales-register')
 
@@ -47,8 +53,14 @@ def SalesView(request):
                 
             
             else: #IF NOT VALID
-                messages.info(request, temp_saleslist.errors)
+                messages.info(request, temp_saleslist.errors)                
                 
+        # elif request.POST.get("button_register"): #if Sales is SAVED
+        #     sales_info = SalesForm(request.POST)
+            
+        #     if sales_info.is_valid():
+                
+            
         elif request.POST.get("delete-item"): #IF ITEM DELETE
             messages.info(request, str(request.POST.get("delete-item")))
             
@@ -68,10 +80,12 @@ def ListItemDelete(request, pk):
 def itemAdd(request, pk):
     item = tempSalesList.objects.get(pk=pk)
     item_qty = item.Quantity
+    max_limit = item.Item.Quantity
+    
     new_qty = item_qty + 1
     
-    print(new_qty)
-    if new_qty <= item_qty:
+    print(f'new qty {new_qty} is greater-de max_limit {max_limit}')
+    if new_qty <= max_limit:
         item.Quantity = new_qty
         item.save()
     else:
