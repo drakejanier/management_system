@@ -54,7 +54,7 @@ class Supplier(models.Model):
     def __str__(self):
         return self.Name
     
-class Purchase(models.Model):
+class Purchase(models.Model): #SHOULD BE CHANGED TO Items model
     Item = models.ForeignKey(Products, on_delete=models.CASCADE)
     Supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
     Quantity = models.IntegerField(default=0)

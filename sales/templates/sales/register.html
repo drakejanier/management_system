@@ -2,62 +2,55 @@
 {% load crispy_forms_tags %}
 
 {% block body %}
+{% comment %} PARENT CARD {% endcomment %}
 <div class="card content-card c-group col-md-12 mx-auto p-0 fade-up">
-    <div class="card-header bg-dark text-white ">{{ title }}</div>
-    <form action="" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}        
-        <div class="card m-3 p-2">
-            
-            <form action="" method="POST">                
+    <div class="card-header bg-dark text-white "> Sales Register </div>
+    
+    <div class="form-row mx-auto col-md-12 mt-3">
+        <div class="card col-md-5 p-0"> 
+            <div class="card-header ">Sales Info</div>
+            <div class="card-content p-3">
+                <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %} 
+                {% comment %} SALES CARD {% endcomment %}
                 <div class="form-row">
-                    <div class="form-group col-md-7 mb-0">
-                        <p>Sales Ref</p>
-                    </div>
-                    <div class="form-group col-md-5 mb-0">
-                        {{ sales_form.OR|as_crispy_field }}
-                    </div>
+                    <div class="col-md-6">{{ sales_form.Sales_ID|as_crispy_field }}</div>
+                    <div class="col-md-6">{{ sales_form.OR|as_crispy_field }}  </div>                        
                 </div>
-
                 <div class="form-row">
-                    <div class="form-group col-md-7 mb-0">
-                        {{ sales_form.Customer|as_crispy_field }}
-                    </div>
-                    <div class="form-group col-md-5 mb-0">
-                        {{ sales_form.Date_Sold|as_crispy_field }}
-                    </div>
+                    <div class="col-md-6"> {{ sales_form.Date_Sold|as_crispy_field }} </div> 
                 </div>
-
+                <div class="form-row">
+                    <div class="col-md-12"> {{ sales_form.Customer|as_crispy_field }} </div>   
+                </div>            
             </form>
-        </div>
-        <div class="row col-md-12 mx-auto">
-            {% comment %} ITEM INFORMATION {% endcomment %}
-            <div class="card  col-md-4 p-0 mx-auto">
-                <div class="card-header"><h5>Item Search</h6></div>
-                <div class="card-content p-2">
-                    <label for="Search">Search</label>
-                    <input type="text" name="" id="">
-                    <button>SEARCH</button>
-                    <hr>            
-                    <h5>Item Information</h5>
-                    <p>new</p>
-                </div>   
             </div>
-            <div class="card  col-md-7 p-0 ml-2 mx-auto">
-                <div class="card-header"><h5>Order List</h6></div>
-                <table>
-                    <thead>
-                        <th>Item</th>     
-                        <th>qty</th>  
-                        <th>Unit Price</th>
-                        <th>+</th>  
-                        <th>-</th>  
-                        <th>~</th>       
-                    </thead>
-                </table>
-            </div>    
         </div>
+        <div class="card col-md-6 ml-3 p-0">
+            <div class="card-header"> Item List </div>
+            <div class="card-content p-3">
+                <form action="" method="POST">
+                {% csrf_token %}        
+                {{ saleslist_form.media }}    
+                    <div class="form-row">
+                        <div class="col-md-6">{{ saleslist_form.Item|as_crispy_field }}</div>
+                        <div class="col-md-2">{{ saleslist_form.Quantity|as_crispy_field }}  </div>    
+                        <div class="col-md-1"></div>   
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary" name="button">Add Item</button>   
+                        </div>   
+                        </div>
+                    </div>                    
+                </form>
 
-    </form>
+                {% for item in added_item %}                
+                    {{ item }}
+                    <hr>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
     
 </div>
 

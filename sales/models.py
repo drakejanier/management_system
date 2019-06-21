@@ -18,6 +18,7 @@ class Sales(models.Model):
     
     def get_absolute_url(self):        
         return reverse('product-list')
+    
 
 class SalesList(models.Model):
     SalesID = models.ForeignKey(Sales, on_delete=models.CASCADE)
@@ -28,3 +29,9 @@ class SalesList(models.Model):
     def __str__(self):
         return '{0} {1}'.format(self.Sales_ID, self.Item)
     
+    
+class tempSalesList(models.Model):
+    SalesID = models.ForeignKey(Sales, on_delete=models.CASCADE)
+    Item = models.ForeignKey(Products, on_delete=models.CASCADE)
+    Quantity = models.IntegerField(default=0)
+    Total_Item_Price = models.DecimalField(max_digits=6, decimal_places=2, default=0)

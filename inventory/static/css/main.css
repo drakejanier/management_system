@@ -2,7 +2,15 @@
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
 /* CUSTOM STYLES */
-
+.form-control{    
+    width:90%;
+}
+.select2, .select2-container, .select2-container--default, .select2-selection--single, .select2-selection  {
+    display:inline-block;
+    height: 38px !important;
+    min-width:200px !important;
+    width:200px !important;
+}
 .content-card{    
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
 }
@@ -21,8 +29,6 @@ h2{
     letter-spacing: 0.2em;
     text-transform: uppercase;
 }
-
-
 
 /*
     Default STYLE
