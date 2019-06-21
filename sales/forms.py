@@ -9,9 +9,7 @@ from inventory.models import Products, Purchase
 
 #autocomplete_light.register(Branch, name = 'ClientAutocomplete',choices = Products.objects.all())
 
-class SalesForm(forms.ModelForm):  
-    Sales_ID = forms.IntegerField()
-    
+class SalesForm(forms.ModelForm):      
     class Meta:
         model = Sales
         fields = ('Customer', 'OR', 'Date_Sold', 'Total_Sales')        

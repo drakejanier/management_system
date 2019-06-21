@@ -66,7 +66,29 @@ def ListItemDelete(request, pk):
     return redirect('sales-register')
 
 def itemAdd(request, pk):
-    item_qty = tempSalesList.objects.filter(id=pk)
-    item_qty.Quantity = item_qty.Quantity + 1
-    item_qty.save()
+    item = tempSalesList.objects.get(pk=pk)
+    item_qty = item.Quantity
+    new_qty = item_qty + 1
     
+    print(new_qty)
+    if new_qty <= item_qty:
+        item.Quantity = new_qty
+        item.save()
+    else:
+        messages.info(request, 'max qty reached')
+    
+    return redirect('sales-register')
+
+def itemDeduct(request, pk):
+    item = tempSalesList.objects.get(pk=pk)
+    item_qty = item.Quantity
+    new_qty = item_qty - 1
+    
+    print(new_qty)
+    if new_qty >= 0:
+        item.Quantity = new_qty
+        item.save()
+    else:
+        messages.info(request, 'min qty reached')
+    
+    return redirect('sales-register')
