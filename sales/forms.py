@@ -4,7 +4,7 @@ from .models import *
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit
 from dal import autocomplete
-from inventory.models import Products
+from inventory.models import Products, Purchase
 #import autocomplete_light
 
 #autocomplete_light.register(Branch, name = 'ClientAutocomplete',choices = Products.objects.all())
@@ -19,14 +19,14 @@ class SalesForm(forms.ModelForm):
 
 class SalesListForm(forms.ModelForm):
     Item = forms.ModelChoiceField( #check FIELD (Items)      
-        queryset=Products.objects.all(), #check MODEL
+        queryset=Purchase.objects.all(), #check MODEL
         required=False,
         widget=autocomplete.ModelSelect2(url='items-autocomplete',attrs={'autocomplete':'off',}),
     )
     class Meta:
-        model = SalesList
-        fields = ('Item', 'SalesID', 'Quantity', 'Total_Item_Price')
-        autocomplete_names = {'client':'ClientAutocomplete'}
+        model = tempSalesList
+        fields = ('Item', 'Quantity')
+        # autocomplete_names = {'client':'ClientAutocomplete'}
 
         
         

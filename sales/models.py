@@ -1,5 +1,5 @@
 from django.db import models
-from inventory.models import Products
+from inventory.models import Products, Purchase
 from datetime import datetime
 from django.contrib.auth.models import User
 
@@ -22,7 +22,7 @@ class Sales(models.Model):
 
 class SalesList(models.Model):
     SalesID = models.ForeignKey(Sales, on_delete=models.CASCADE)
-    Item = models.ForeignKey(Products, on_delete=models.CASCADE)
+    Item = models.ForeignKey(Purchase, on_delete=models.CASCADE)
     Quantity = models.IntegerField(default=0)
     Total_Item_Price = models.DecimalField(max_digits=6, decimal_places=2, default=0)
     
@@ -31,7 +31,9 @@ class SalesList(models.Model):
     
     
 class tempSalesList(models.Model):
-    SalesID = models.ForeignKey(Sales, on_delete=models.CASCADE)
-    Item = models.ForeignKey(Products, on_delete=models.CASCADE)
-    Quantity = models.IntegerField(default=0)
-    Total_Item_Price = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+    # SalesID = models.ForeignKey(Sales, on_delete=models.CASCADE)
+    Item = models.ForeignKey(Purchase, on_delete=models.CASCADE)
+    Quantity = models.IntegerField(default=0)    
+    
+    def get_total_item(self):
+        return self.Quantity * self.Item.List_Price

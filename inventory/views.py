@@ -14,8 +14,7 @@ from datetime import datetime, date
 # Create your views here.
 
 def home(request):
-    if request.user.is_authenticated:
-        messages.success(request, f'good')
+    if request.user.is_authenticated:        
         purchases_today = Purchase.objects.filter(Date_Purchased__date=date.today())        
         print(purchases_today.count())
         context = { 
@@ -141,7 +140,6 @@ def PurchaseNewItem(request):
         else:
             messages.error(request, f'Form validation error {purchase_form.errors}.')
     else:
-        
         product_form = ProductForm()
         purchase_form = PurchaseForm()
         
@@ -166,10 +164,8 @@ def PurchaseDelete(request, pk):
     return redirect('purchase-list')
     messages.success(request, f'Deleted.')  
     
-class getItemList(autocomplete.Select2QuerySetView):
-    
-    def get_queryset(self):
-        
+class getItemList(autocomplete.Select2QuerySetView):    
+    def get_queryset(self):        
         if self.q:
-            items = Products.objects.filter(Name__istartswith=self.q)
+            items = Purchase.objects.filter(Item__Name__istartswith=self.q)
         return items

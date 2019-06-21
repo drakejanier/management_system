@@ -7,12 +7,12 @@
     <div class="card-header bg-dark text-white "> Sales Register </div>
     
     <div class="form-row mx-auto col-md-12 mt-3">
+        {% comment %} SALES CARD {% endcomment %}
         <div class="card col-md-5 p-0"> 
             <div class="card-header ">Sales Info</div>
             <div class="card-content p-3">
-                <form action="" method="POST" enctype="multipart/form-data">
-                {% csrf_token %} 
-                {% comment %} SALES CARD {% endcomment %}
+                <form action="save-sales" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}                 
                 <div class="form-row">
                     <div class="col-md-6">{{ sales_form.Sales_ID|as_crispy_field }}</div>
                     <div class="col-md-6">{{ sales_form.OR|as_crispy_field }}  </div>                        
@@ -26,10 +26,12 @@
             </form>
             </div>
         </div>
+        
+
         <div class="card col-md-6 ml-3 p-0">
             <div class="card-header"> Item List </div>
             <div class="card-content p-3">
-                <form action="" method="POST">
+                <form action="" name="add-item" method="POST">
                 {% csrf_token %}        
                 {{ saleslist_form.media }}    
                     <div class="form-row">
@@ -37,7 +39,7 @@
                         <div class="col-md-2">{{ saleslist_form.Quantity|as_crispy_field }}  </div>    
                         <div class="col-md-1"></div>   
                         <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary" name="button">Add Item</button>   
+                            <button type="submit" class="btn btn-primary" name="button_add" value="AddItem">Add Item</button>   
                         </div>   
                         </div>
                     </div>                    
