@@ -37,3 +37,15 @@ class tempSalesList(models.Model):
     
     def get_total_item(self):
         return self.Quantity * self.Item.Cost
+    
+    def get_limit(self):
+        return self.Item.Quantity
+    
+    def get_Name(self):
+        return self.Item.Item.Name
+    
+    def get_Unit(self):
+        return self.Item.Item.Unit
+    
+    def get_Price(self):
+        return self.Item.Cost

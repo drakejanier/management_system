@@ -26,7 +26,7 @@ class SalesListForm(forms.ModelForm):
     class Meta:
         model = tempSalesList
         fields = ('Item', 'Quantity')
-        # autocomplete_names = {'client':'ClientAutocomplete'}
+        
 
         
         

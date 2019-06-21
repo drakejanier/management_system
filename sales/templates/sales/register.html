@@ -3,58 +3,43 @@
 
 {% block body %}
 {% comment %} PARENT CARD {% endcomment %}
-<div class="card content-card c-group col-md-12 mx-auto p-0 fade-up">
-    <div class="card-header bg-dark text-white "> Sales Register </div>
+<div class="card content-card c-group col-md-12 mx-auto p-0 ">
+    <div class="card-header"> <h4> Sales Register </h4> </div>
     
-    <div class="form-row mx-auto col-md-12 mt-3">
-        {% comment %} SALES CARD {% endcomment %}
-        <div class="card col-md-5 p-0"> 
-            <div class="card-header ">Sales Info</div>
-            <div class="card-content p-3">
-                <form action="save-sales" method="POST" enctype="multipart/form-data">
-                {% csrf_token %}                 
-                <div class="form-row">
-                    <div class="col-md-6">{{ sales_form.Sales_ID|as_crispy_field }}</div>
-                    <div class="col-md-6">{{ sales_form.OR|as_crispy_field }}  </div>                        
-                </div>
-                <div class="form-row">
-                    <div class="col-md-6"> {{ sales_form.Date_Sold|as_crispy_field }} </div> 
-                </div>
-                <div class="form-row">
-                    <div class="col-md-12"> {{ sales_form.Customer|as_crispy_field }} </div>   
-                </div>            
-            </form>
-            </div>
-        </div>
+    <div class="row mx-auto col-md-12 mt-3">       
         
-
-        <div class="card col-md-6 ml-3 p-0">
-            <div class="card-header"> Item List </div>
-            <div class="card-content p-3">
+        {% comment %} ITEM CARD {% endcomment %}
+        <div class="card-content col-md-7 p-3">
                 <form action="" name="add-item" method="POST">
-                {% csrf_token %}        
-                {{ saleslist_form.media }}    
+                    {% csrf_token %}        
+                    {{ saleslist_form.media }}    
                     <div class="form-row">
                         <div class="col-md-6">{{ saleslist_form.Item|as_crispy_field }}</div>
-                        <div class="col-md-2">{{ saleslist_form.Quantity|as_crispy_field }}  </div>    
+                        <div class="col-md-2">{{ saleslist_form.Quantity|as_crispy_field }} </div>    
                         <div class="col-md-1"></div>   
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary" name="button_add" value="AddItem">Add Item</button>   
-                        </div>   
-                        </div>
+                        <div class="col-md-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-info mt-2" name="button_add" value="AddItem">Add Item</button>   
+                        </div>                           
                     </div>                    
                 </form>
                 <hr>
 
                 {% for item in added_item %}                
                     {% comment %} {{ item }} {% endcomment %}                    
-                    <div class="card mx-3 my-1 p-2">
+                    <div class="card col-sm-12 mx-0 my-1 p-2">
                         <div class="row">
-                            <div class="col-sm-4">{{ item.Item }}</div>
-                            <div class="col-sm-2">{{ item.Quantity }}</div>
-                            <div class="col-sm-3">{{ item.get_total_item }}</div>
-                            <div class="col-sm-3">
-                                <a href="{% url 'list-item-delete' item.pk %}" class="btn btn=sm" role="button" name="delete-item" >
+                            <div class="col-sm-4"> 
+                                <h6> {{ item.get_Name }} </h6> 
+                                <p> {{ item.get_Unit }} |  {{ item.get_Price|floatformat:2 }} </p> 
+                            </div> 
+                            <div class="com-sm-1"> <a href=""> <i class="fas fa-minus-square"></i> </a> </div>
+                            <div class="col-sm-2 text-center"> <span>{{ item.Quantity }} / {{ item.get_limit }}</span> </div>
+                            
+                            <div class="com-sm-1"> <a href=""> <i class="fas fa-plus-square"></i> </a> </div>
+                            <div class="col-sm-3 text-right">P {{ item.get_total_item|floatformat:2 }}</div>
+                            <div class="col-sm-1">
+                                <a href="{% url 'list-item-delete' item.pk %}" 
+                                    role="button" name="delete-item" >
                                     <i class="fas fa-trash-alt"></i>
                                 </a>
                             </div>                            
@@ -62,16 +47,38 @@
                     </div>
                 {% endfor %}
             </div>
+
+        {% comment %} SALES CARD {% endcomment %}
+        <div class="card col-md-5 p-0"> 
+            <div class="card-header ">Sales Info</div>
+            <div class="card-content p-3">
+                <form action="save-sales" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}                 
+                    <div class="form-row">
+                        <div class="col-md-6">{{ sales_form.Sales_ID|as_crispy_field }}</div>
+                        <div class="col-md-6">{{ sales_form.OR|as_crispy_field }}  </div>                        
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-6"> {{ sales_form.Date_Sold|as_crispy_field }} </div> 
+                    </div>
+                    <div class="form-row">
+                        <div class="col-md-12"> {{ sales_form.Customer|as_crispy_field }} </div>   
+                    </div>            
+                </form>
+            </div>
         </div>
-    </div>
-    
-    
+
+    </div>       
 </div>
 
 <script>
     $(document).ready(function() {
         $("[name='Quantity'],[name='Cost']").on("change keyup", function() {
             $("[name='List_Price']").val(($("[name='Quantity']").val() * $("[name='Total_Sales']").val()))
+        });
+        $("[name='Quantity']").attr({
+            "max" : 10,
+            "min" : 0
         });
     });
 </script> 
