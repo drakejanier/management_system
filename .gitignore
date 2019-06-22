@@ -2,5 +2,5 @@ env/
 .vscode/
 projectnotes.txt
 projectNotes.txt
-
+git
 *.pyc
