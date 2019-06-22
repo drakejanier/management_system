@@ -14,10 +14,10 @@ from inventory.models import Products, Purchase
 class SalesForm(forms.ModelForm):      
     class Meta:
         model = Sales
-        fields = ('Customer', 'OR', 'Date_Sold', 'Total_Sales')        
-        Date_Sold = forms.DateField( widget=forms.TextInput(attrs={'type': 'date'} ))   
+        fields = ('Customer', 'OR', 'Date_Sold')        
+        Date_Sold = forms.DateField( widget=forms.TextInput(attrs={'type': 'date'} ))
         widgets = {
-            'Date_Sold': DatePickerInput(format='%m/%d/%Y'),
+            'Date_Sold': DatePickerInput(format='%m/%d/%Y'),            
         }
 
 class SalesListForm(forms.ModelForm):

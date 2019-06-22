@@ -92,7 +92,6 @@ def PurchaseView(request): #if Purchase is clicked
     }    
     return render (request, 'inventory/purchase_add.html', context)
 
-
 class PurchaseViewItem(CreateView): #Purchase with item
     #model = Purchase
     form_class = PurchaseForm

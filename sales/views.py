@@ -22,8 +22,14 @@ def SalesView(request):
     saleslist_form = SalesListForm()
     added_item = tempSalesList.objects.all()
     product_count = tempSalesList.objects.count()
-    qty = tempSalesList.objects.all().aggregate(total_qty=Sum('Quantity'))
+    qty = tempSalesList.objects.all().aggregate(total_qty=Sum('Quantity'))    
     total_qty = qty.get('total_qty')
+    
+    total_price = 0
+    for item in added_item:
+        total_price = total_price + int(item.get_total_item())
+
+    print (total_price)
     
     context = {
         'sales_form' : sales_form,
@@ -31,6 +37,7 @@ def SalesView(request):
         'added_item' : added_item,
         'product_count' : product_count,
         'total_quantity' : total_qty,
+        'total_price' : total_price,
     }
     
     if request.method == 'POST': #IF POSTED
@@ -49,22 +56,46 @@ def SalesView(request):
                     return redirect('sales-register')
 
                 else:
-                    messages.info(request, f"Invalid Quantity. Maximum Quantity is {item_qty}") 
-                
+                    messages.info(request, f"Invalid Quantity. Maximum Quantity is {item_qty}")                 
             
             else: #IF NOT VALID
                 messages.info(request, temp_saleslist.errors)                
                 
-        # elif request.POST.get("button_register"): #if Sales is SAVED
-        #     sales_info = SalesForm(request.POST)
+        elif request.POST.get("button_register"): #if Sales is SAVED
+            sales_info = SalesForm(request.POST) #pass form
             
-        #     if sales_info.is_valid():
+            if sales_info.is_valid() and total_qty > 0:
+                # sales_model = Sales() #recreate model
+                # form_data = sales_info.cleaned_data #get form SALES data
+                sales_reg = sales_info.save(commit=False)
+                sales_reg.Total_Sales = total_price
+                sales_reg.User = request.user
+                sales_reg.save() #< SALES saved here 
+                sales_id = sales_reg.pk
+                item_instance = Sales.objects.get(pk=sales_id)
+                print(sales_id)
+                messages.info(request, f"ISuccess sales ID : {sales_id}") #<< SALES SAVED success HERE
+                
+                temp_list = tempSalesList.objects.all()                
+                
+                print(f'item count{temp_list.count()}')
+                
+                for obj in temp_list:
+                    sales_list = SalesList()
+                    sales_list.SalesID = item_instance
+                    sales_list.Item = getattr(obj, 'Item')
+                    sales_list.Quantity = getattr(obj, 'Quantity')
+                    sales_list.Total_Item_Price = obj.get_total_item()
+                    sales_list.save()
+                
+            else:
+                messages.info(request, f"Invalid form {sales_info.errors}. {total_qty}")
                 
             
         elif request.POST.get("delete-item"): #IF ITEM DELETE
             messages.info(request, str(request.POST.get("delete-item")))
             
-        else: #IF NOT INC CHOICE
+        else: #IF NOT IN CHOICEs
             print("did not ")
     else:
         print("GET")

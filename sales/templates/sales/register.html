@@ -24,6 +24,7 @@
                 </form>
                 <hr>
 
+                {% comment %} TOTAL PRICE {% endcomment %} 
                 {% for item in added_item %}                
                     {% comment %} {{ item }} {% endcomment %}                    
                     <div class="card col-sm-12 mx-0 my-1 p-2">
@@ -38,6 +39,7 @@
                             <div class="com-sm-1"> <a href="{% url 'list-item-add' item.pk %}"> <i class="fas fa-plus-square"></i> </a> </div>
 
                             <div class="col-sm-3 text-right">P {{ item.get_total_item|floatformat:2 }}</div>
+                
                             <div class="col-sm-1">
                                 <a href="{% url 'list-item-delete' item.pk %}" 
                                     role="button" name="delete-item" >
@@ -47,12 +49,13 @@
                         </div>                        
                     </div>
                 {% endfor %}
+                
             </div>
 
         {% comment %} SALES CARD {% endcomment %}
         <div class="card col-md-5 p-0"> 
             <div class="card-header ">Sales Info</div>
-            <form action="save-sales" method="POST" enctype="multipart/form-data">
+            <form action="" method="POST">
                 {% csrf_token %}
                 <div class="card-content p-3">                    
                     {{ sales_form.media }}          
@@ -65,8 +68,10 @@
                         <div class="col-md-12"> {{ sales_form.Customer|as_crispy_field }} </div>   
                     </div>            
                     <hr>
-                    <h6>Total products : <strong>{{ product_count }}</strong></h6>
-                    <h6>Total Price : <strong>P {{ total_quantity|floatformat:2 }}</strong></h6>
+                    <h6>Total Products : <strong>{{ product_count }}</strong></h6>
+                    <h6>Total Quantity : <strong>{{ total_quantity }}</strong></h6>
+                    <h6>Total Price : <strong>P {{ total_price|floatformat:2 }}</strong></h6>
+                    
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary  mt-2" name="button_register" value="Save">Register Sales</button>   
