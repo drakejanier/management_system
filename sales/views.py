@@ -22,7 +22,7 @@ def SalesView(request):
     saleslist_form = SalesListForm()
     added_item = tempSalesList.objects.all()
     product_count = tempSalesList.objects.count()
-    qty = tempSalesList.objects.all().aggregate(total_qty=Sum('Quantity'))    
+    qty = tempSalesList.objects.all().aggregate(total_qty=Sum('Quantity'))  
     total_qty = qty.get('total_qty')
     
     total_price = 0
@@ -65,29 +65,36 @@ def SalesView(request):
             sales_info = SalesForm(request.POST) #pass form
             
             if sales_info.is_valid() and total_qty > 0:
-                # sales_model = Sales() #recreate model
-                # form_data = sales_info.cleaned_data #get form SALES data
                 sales_reg = sales_info.save(commit=False)
                 sales_reg.Total_Sales = total_price
                 sales_reg.User = request.user
-                sales_reg.save() #< SALES saved here 
+                sales_reg.save() #<<<<<<<<<<<<<<<< SALES saved here 
                 sales_id = sales_reg.pk
                 item_instance = Sales.objects.get(pk=sales_id)
-                print(sales_id)
-                messages.info(request, f"ISuccess sales ID : {sales_id}") #<< SALES SAVED success HERE
-                
+                                
                 temp_list = tempSalesList.objects.all()                
-                
-                print(f'item count{temp_list.count()}')
                 
                 for obj in temp_list:
                     sales_list = SalesList()
                     sales_list.SalesID = item_instance
-                    sales_list.Item = getattr(obj, 'Item')
-                    sales_list.Quantity = getattr(obj, 'Quantity')
+                    sold_item = getattr(obj, 'Item')
+                    sold_qty = getattr(obj, 'Quantity')
+                    
+                    sales_list.Item = sold_item
+                    sales_list.Quantity = sold_qty
                     sales_list.Total_Item_Price = obj.get_total_item()
-                    sales_list.save()
-                
+                    sales_list.save()  # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SALES LIST SAVED
+                    
+                    #deduct in Purchase Quantity
+                    print(f'item pk = {sold_item.pk}')
+                    item_purchase = Purchase.objects.get(pk = sold_item.pk) #search item in Purchase
+                    item_purchase.Quantity = int(item_purchase.Quantity) - sold_qty
+                    item_purchase.save()
+                    
+                tempSalesList.objects.all().delete() # templist DELETED
+                messages.success(request, f'Items Saved')
+                return redirect('sales-register')
+
             else:
                 messages.info(request, f"Invalid form {sales_info.errors}. {total_qty}")
                 
