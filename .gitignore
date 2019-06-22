@@ -3,3 +3,4 @@ env/
 projectnotes.txt
 projectNotes.txt
 inventory/__pycache__/views.cpython-37.pyc
+*.pyc
