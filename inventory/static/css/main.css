@@ -1,10 +1,19 @@
-
-@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
-
 /* CUSTOM STYLES */
-
+.form-control{    
+    width:90%;
+}
+.select2, .select2-container, .select2-container--default, .select2-selection--single, .select2-selection  {
+    display:inline-block;
+    height: 38px !important;
+    min-width:200px !important;
+    width:200px !important;
+}
 .content-card{    
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.content-card{
+    font-size:0.9em;
 }
 .nav-icn{
     min-width: 20px;
@@ -13,7 +22,6 @@
 .page-title{
     margin-left:50px;
 }
-
 h2{
     color: rgb(30, 59, 102);
     font-family: 'Roboto', sans-serif;
@@ -22,7 +30,14 @@ h2{
     text-transform: uppercase;
 }
 
+h4{
+    font-size:2em;
+    font-weight: 300;
+}
 
+.card p {
+    line-height: 1.5em;
+}
 
 /*
     Default STYLE

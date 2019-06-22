@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'dal', #dal for autocomplete
     'dal_select2', #dal for autocomplete
+    'bootstrap_datepicker_plus', #datepicker
     
     'django.contrib.admin',
     'django.contrib.auth',
@@ -129,3 +130,7 @@ STATIC_URL = '/static/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_REDIRECT_URL = 'home-page'
+
+BOOTSTRAP4 = {
+    'include_jquery': True,
+}

@@ -2,54 +2,94 @@
 {% load crispy_forms_tags %}
 
 {% block body %}
-<div class="card content-card col-md-4 mx-auto p-0 fade-up">
-    <div class="card-header bg-dark text-white ">{{ title }}</div>
+{% comment %} PARENT CARD {% endcomment %}
+<div class="card content-card c-group col-md-12 mx-auto p-0 ">
+    <div class="card-header"> <h4> Sales Register </h4> </div>
     
-    <form action="" method="POST" >
-
-        {% csrf_token %}
-        {% comment %} PRODUCTS FORM {% endcomment %}
-        <div class="form-group col-md-12 mb-0">
-            {{ sales_form.media }}
-            
-            <div class="form-group col-md-12 mb-0">                
-                <div class="form-group col-md-12 mb-0 mt-2">
-                    {{ sales_form.Items|as_crispy_field }}
-                </div>                                   
-                
-                <div class="form-group col-md-12 mb-0">
-                    {{ sales_form.Customer|as_crispy_field }}
-                </div>     
-                <div class="form-row mx-auto">
-                    <div class="col-md-4 mb-0">
-                        {{ sales_form.Quantity|as_crispy_field }}
-                    </div>
-                    <div class=" col-md-4 mb-0">
-                        {{ sales_form.List_Price|as_crispy_field }}
-                    </div>
-                    <div class="col-md-4 mb-0">
-                        {{ sales_form.Total_Sales|as_crispy_field }}
-                    </div>
-                </div>
-            </div>
-            
-        </div>
-
-        <div class="card-footer text-right">
-            <a href="{% url 'product-new' %}" class="btn btn-outline-info btn-dark" role="button">Purchase New Product</a>
-            <button type="submit" class="btn btn-primary" name="button">Sell</button>                
-        </div>
+    <div class="row mx-auto col-md-12 mt-3">       
         
-    </form>
+        {% comment %} ITEM CARD {% endcomment %}
+        <div class="card-content col-md-7 p-3">
+                <form action="" name="add-item" method="POST">
+                    {% csrf_token %}        
+                    {{ saleslist_form.media }}    
+                    <div class="form-row">
+                        <div class="col-md-6">{{ saleslist_form.Item|as_crispy_field }}</div>
+                        <div class="col-md-2">{{ saleslist_form.Quantity|as_crispy_field }} </div>    
+                        <div class="col-md-1"></div>   
+                        <div class="col-md-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-info mt-2" name="button_add" value="AddItem">Add Item</button>   
+                        </div>                           
+                    </div>                    
+                </form>
+                <hr>
 
-    
+                {% comment %} TOTAL PRICE {% endcomment %} 
+                {% for item in added_item %}                
+                    {% comment %} {{ item }} {% endcomment %}                    
+                    <div class="card col-sm-12 mx-0 my-1 p-2">
+                        <div class="row">
+                            <div class="col-sm-4"> 
+                                <h6> {{ item.get_Name }} </h6> 
+                                <p class = "mb-0"> {{ item.get_Unit }} |  {{ item.get_Price|floatformat:2 }} </p> 
+                            </div> 
 
+                            <div class="com-sm-1"> <a href="{% url 'list-item-deduct' item.pk %}"> <i class="fas fa-minus-square"></i> </a> </div>
+                            <div class="col-sm-2 text-center"> <span>{{ item.Quantity }} / {{ item.get_limit }}</span> </div>                            
+                            <div class="com-sm-1"> <a href="{% url 'list-item-add' item.pk %}"> <i class="fas fa-plus-square"></i> </a> </div>
+
+                            <div class="col-sm-3 text-right">P {{ item.get_total_item|floatformat:2 }}</div>
+                
+                            <div class="col-sm-1">
+                                <a href="{% url 'list-item-delete' item.pk %}" 
+                                    role="button" name="delete-item" >
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>                            
+                        </div>                        
+                    </div>
+                {% endfor %}
+                
+            </div>
+
+        {% comment %} SALES CARD {% endcomment %}
+        <div class="card col-md-5 p-0"> 
+            <div class="card-header ">Sales Info</div>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="card-content p-3">                    
+                    {{ sales_form.media }}          
+                    <div class="form-row">                        
+                        <div class="col-md-4">{{ sales_form.OR|as_crispy_field }}  </div>     
+                        <div class="col-md-6"> {{ sales_form.Date_Sold|as_crispy_field }} </div> 
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="col-md-12"> {{ sales_form.Customer|as_crispy_field }} </div>   
+                    </div>            
+                    <hr>
+                    <h6>Total Products : <strong>{{ product_count }}</strong></h6>
+                    <h6>Total Quantity : <strong>{{ total_quantity }}</strong></h6>
+                    <h6>Total Price : <strong>P {{ total_price|floatformat:2 }}</strong></h6>
+                    
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary  mt-2" name="button_register" value="Save">Register Sales</button>   
+                </div>
+            </form>
+        </div>
+
+    </div>       
 </div>
 
 <script>
     $(document).ready(function() {
         $("[name='Quantity'],[name='Cost']").on("change keyup", function() {
             $("[name='List_Price']").val(($("[name='Quantity']").val() * $("[name='Total_Sales']").val()))
+        });
+        $("[name='Quantity']").attr({
+            "max" : 1000,
+            "min" : 0
         });
     });
 </script> 

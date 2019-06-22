@@ -54,7 +54,7 @@ class Supplier(models.Model):
     def __str__(self):
         return self.Name
     
-class Purchase(models.Model):
+class Purchase(models.Model): #should be changed to ITEMS model
     Item = models.ForeignKey(Products, on_delete=models.CASCADE)
     Supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
     Quantity = models.IntegerField(default=0)
@@ -64,7 +64,7 @@ class Purchase(models.Model):
     User = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     
     def __str__(self):
-        return '{0} {1}'.format(self.Item, self.Date_Purchased)
+        return '{0} {1}'.format(self.Item, self.Cost)
     
     def get_absolute_url(self):
         
