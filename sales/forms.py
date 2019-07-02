@@ -22,17 +22,10 @@ class SalesForm(forms.ModelForm):
 
 class SalesListForm(forms.ModelForm):
     Item = forms.ModelChoiceField( #check FIELD (Items)      
-        queryset=Purchase.objects.all(), #check MODEL
+        queryset=Products.objects.all(), #check MODEL
         required=False,
         widget=autocomplete.ModelSelect2(url='items-autocomplete',attrs={'autocomplete':'off',}),
     )
     class Meta:
         model = tempSalesList
         fields = ('Item', 'Quantity')
-        
-
-        
-        
-        
-    
-
