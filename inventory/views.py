@@ -1,6 +1,7 @@
 from dal import autocomplete
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Products, Category, Purchase
+from sales.models import Sales, SalesList
 from django.db.models import Avg, Count, Min, Sum
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -15,11 +16,15 @@ from datetime import datetime, date
 
 def home(request):
     if request.user.is_authenticated:        
-        purchases_today = Purchase.objects.filter(Date_Purchased__date=date.today())        
+        purchases_today = Purchase.objects.filter(Date_Purchased__date=date.today())  
+        sales_today = SalesList.objects.filter(SalesID__Date_Sold__date=date.today())  
+        
         print(purchases_today.count())
         context = { 
             'purchases' : purchases_today,
             'total_purchases': purchases_today.aggregate(Sum('Total_Cost'))['Total_Cost__sum'] or 0.00,
+            'sales' : sales_today,
+            'total_sales' : sales_today.aggregate(Sum('Total_Item_Price'))['Total_Item_Price__sum'] or 0.00,
             'title': 'Home', 
             }
         
@@ -38,7 +43,6 @@ def ProductView(request): #TEMP GETTING OBSOLETE
         'title': 'Product List',
         'search_form':search_form,
     }
-
     return render(request, 'inventory/inventory.html', context)
 
 class SearchProducts(ListView):
@@ -117,6 +121,12 @@ class PurchaseViewItem(CreateView): #Purchase with item
         Purchase.Item = product_item
         Purchase.User = self.request.user
         Purchase.save()
+        
+        print(f'prd : {product_item.pk} ')
+        add_item = Products.objects.get(pk = product_item.pk) 
+        add_item.Quantity = int(add_item.Quantity) + int(Purchase.Quantity)
+        add_item.save() #1
+        
         messages.success(self.request,f'Item added. {product_item}')
         return super(PurchaseViewItem, self).form_valid(form)
     
@@ -128,7 +138,11 @@ def PurchaseNewItem(request):
         purchase_form = PurchaseForm(request.POST)
         
         if product_form.is_valid() and purchase_form.is_valid():
-            product_item = product_form.save()            
+            frm_qty = purchase_form.cleaned_data['Quantity']
+            product_item = product_form.save(commit=False)     
+            product_item.Quantity = frm_qty
+            product_item = product_form.save()
+            
             Purchase = purchase_form.save(commit=False)
             
             Purchase.Item = product_item
@@ -164,7 +178,8 @@ def PurchaseDelete(request, pk):
     messages.success(request, f'Deleted.')  
     
 class getItemList(autocomplete.Select2QuerySetView):    
-    def get_queryset(self):        
+    def get_queryset(self):      
+        items = None
         if self.q:
             items = Purchase.objects.filter(Item__Name__istartswith=self.q)
         return items

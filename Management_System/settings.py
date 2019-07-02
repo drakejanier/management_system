@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'dal', #dal for autocomplete
     'dal_select2', #dal for autocomplete
     'bootstrap_datepicker_plus', #datepicker
+    'django.contrib.humanize',
     
     'django.contrib.admin',
     'django.contrib.auth',
