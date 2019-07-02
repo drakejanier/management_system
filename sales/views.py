@@ -87,7 +87,7 @@ def SalesView(request):
                     
                     #deduct in Purchase Quantity
                     print(f'item pk = {sold_item.pk}')
-                    item_purchase = Purchase.objects.get(pk = sold_item.pk) #search item in Purchase
+                    item_purchase = Products.objects.get(pk = sold_item.pk) #search item in Purchase
                     item_purchase.Quantity = int(item_purchase.Quantity) - sold_qty
                     item_purchase.save()
                     

@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -10,7 +11,7 @@ from datetime import datetime
 class Products(models.Model):
     Name = models.CharField(max_length=50)
     Unit = models.CharField(max_length=50)
-    #Quantity = models.IntegerField(default=0)
+    Quantity = models.IntegerField(default=0)
     List_Price = models.DecimalField(max_digits=8, decimal_places=2)
     CategoryOpt = (
         ('food','Food'),
@@ -32,7 +33,13 @@ class Products(models.Model):
 
     def get_absolute_url(self):
         return reverse('post-detail', kwargs={'pk': self.pk})
-
+    
+    def get_qty(self):
+        qty = 0        
+        qty = Purchase.objects.all().filter(Item=self.pk).aggregate(total_qty=Sum('Quantity'))  
+        total_qty = qty.get('total_qty')
+        
+        return str(total_qty)
 
 class Category(models.Model):
     Name = models.CharField(max_length=50)

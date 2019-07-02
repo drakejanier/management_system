@@ -1,4 +1,6 @@
-/* CUSTOM STYLES */
+/* CUSTOM STYLES 
+    h4 -card titles
+*/
 .form-control{    
     width:90%;
 }
@@ -15,6 +17,33 @@
 .content-card{
     font-size:0.9em;
 }
+
+.c-headers{
+    background-color:#47748b;
+}
+.c-headers a{    
+    color:#fff;
+    font-size:0.6em;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.item-card{
+    background-color: #f8f8f8;
+    font-size:0.9em;
+    transition:0.3s ease-in;
+}
+.item-card:hover{
+    background:#fff;
+    font-size:1em;   
+}
+.item-desc{
+    display:none;
+}
+.item-card:hover .item-desc{
+    display:block;  
+}
+
 .nav-icn{
     min-width: 20px;
 }

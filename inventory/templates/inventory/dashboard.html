@@ -1,60 +1,100 @@
 {% extends 'inventory/base.html' %}
 
 {% block body %}
-<div class="card col-md-5 p-0 mx-auto fade-up">
-    <div class="card-header"> Purchases Today </div>
+{% load humanize %}
 
-    <div class="card-body p-2">
-        <table class="table table-hover table-bordered table-sm col-sm-6 " id="dash-tables" font- >
-            <thead class="thead-dark tbl-head col-sm-6">
-                <th >Item</th>
-                <th >Quantity</th>
-                <th >Cost</th>
-                <th >User</th>        
-            </thead>
+{% comment %} ~~~~~~~ PURCHASES ~~~~~~~~~~~ {% endcomment %}
+<div class="row">
+    <div class="card content-card col-md-5 p-0 mx-auto fade-up">
+        <div class="card-header"> Purchases Today </div>
+        <div class="card-body p-2">
 
-            <tbody>
-                {% for item in purchases %}            
-                    <tr>
-                        <td>{{ item.Item }}</td>
-                        <td>{{ item.Quantity }}</td>
-                        <td>{{ item.Total_Cost }}</td>
-                        <td>{{ item.User }}</td>               
-                    </tr>
-                {% endfor %}
+            <ul class="nav list-title c-headers">
+                <li class="nav-item col-4"> <a href="">Item</a> </li>
+                <li class="nav-item col-2 text-center"> <a href="">Qty</a> </li>
+                <li class="nav-item col-3 text-right"> <a href="">Cost</a> </li>
+                <li class="nav-item col-3"> <a href="">User</a> </li>
+            </ul>
+
+            {% for item in purchases %}
+                <a href="" class="card item-card mt-1">
+                    <ul class=" nav list-title">
+                        <li class="nav-item col-4 "> 
+                            <strong> {{ item.Item.Name }} </strong> 
+                            <br>
+                            <span class="item-desc"> {{ item.Cost}} | {{ item.Item.Unit }} </span> 
+                        </li>
+                        <li class="nav-item col-2 text-center"> {{ item.Quantity }} </li>
+                        <li class="nav-item col-3 text-right"> {{ item.Total_Cost|intcomma }} </li>
+                        <li class="nav-item col-3"> {{ item.User }} </li>
+                    </ul>
+                </a>                
+            {% endfor %}
+
+            <div class="col-sm-12 float-right">
+                <span class="float-right">Total Cost : <strong>P {{ total_purchases|intcomma }}</strong></span>                
+            </div>   
+        </div>        
+        <div class="card-footer text-muted">
+            <div class="row text-right">
+                <div class="col-sm-3">
+                    <a href="{% url 'purchase-view' %}" 
+                        class="btn btn-info btn-sm " 
+                        role="button" 
+                        data-toggle="tooltip" data-placement="right" 
+                        title="View Purchase List">
+                        Purchase
+                    </a>
+                </div>
                 
-            </tbody>
-        </table>
-        <div class="col-sm-12 float-right">
-            <span class="float-right">Total Cost : <strong>P {{ total_purchases|floatformat:2 }}</strong></span>                
-        </div>   
-    </div>
-    
-    <div class="card-footer text-muted">
-        <div class="row text-right">
-            <div class="col-sm-3">
-                <a href="{% url 'purchase-view' %}" 
-                    class="btn btn-info btn-sm " 
-                    role="button" 
-                    data-toggle="tooltip" data-placement="right" 
-                    title="View Purchase List">
-                    Purchase
-                </a>
-            </div>
-            
-            <div class="col-sm-4">
-                <a href="{% url 'purchase-list' %}" 
-                    class="btn btn-outline-info btn-sm " 
-                    role="button" 
-                    data-toggle="tooltip" data-placement="right" 
-                    title="View Purchase List">
-                    View Purchases
-                </a>
+                <div class="col-sm-4">
+                    <a href="{% url 'purchase-list' %}" 
+                        class="btn btn-outline-info btn-sm " 
+                        role="button" 
+                        data-toggle="tooltip" data-placement="right" 
+                        title="View Purchase List">
+                        View Purchases
+                    </a>
+                </div>
             </div>
         </div>
     </div>
-</div>    
-    
-    
+
+    {% comment %} ~~~~~~~~~~~~ SALES ~~~~~~~~~~~~ {% endcomment %}
+    <div class="card content-card-2 col-md-5 mx-auto fade-up px-0">
+        <div class="card-header">Sales Today</div>
+        <div class="card-body p-2">
+
+            <ul class="nav list-title c-headers">
+                <li class="nav-item col-4"> <a href="">Item</a> </li>
+                <li class="nav-item col-2 text-center"> <a href="">Qty</a> </li>
+                <li class="nav-item col-3 text-right"> <a href="">Sales</a> </li>
+                <li class="nav-item col-3"> <a href="">Customer</a> </li>
+            </ul>
+
+            {% for sales_item in sales %}
+                <a href="" class="card item-card mt-1">
+                    <ul class=" nav list-title">
+                        <li class="nav-item col-4 "> 
+                            <strong> {{ sales_item.Item.Name }} </strong> 
+                            <br>
+                            <span class="item-desc"> {{ sales_item.List_Price|intcomma }} | {{ sales_item.Item.Item.Unit }} </span> 
+                        </li>
+                        <li class="nav-item col-2 text-center"> {{ sales_item.Quantity }} </li>
+                        <li class="nav-item col-3 text-right"> {{ sales_item.Total_Item_Price|intcomma }} </li>
+                        <li class="nav-item col-3"> {{ sales_item.SalesID.Customer }} </li>
+                    </ul>
+                </a>                
+            {% endfor %}
+            <div class="col-sm-12 float-right">
+                <span class="float-right">Total Sales : <strong>P {{ total_sales|intcomma }}</strong></span>                
+            </div>   
+        </div>
+        <div class="card-footer text-muted px-0">
+        </div>
+    </div>    
 </div>
+
+
+
 {% endblock %}
