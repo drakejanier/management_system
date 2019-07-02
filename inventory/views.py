@@ -181,5 +181,5 @@ class getItemList(autocomplete.Select2QuerySetView):
     def get_queryset(self):      
         items = None
         if self.q:
-            items = Purchase.objects.filter(Item__Name__istartswith=self.q)
+            items = Products.objects.filter(Name__istartswith=self.q)
         return items
