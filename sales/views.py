@@ -1,7 +1,7 @@
 
 from django.contrib import messages
 from django.db.models import Sum
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, CreateView, FormView, View
 from django.urls import reverse_lazy
 from .models import Sales, tempSalesList, SalesList
@@ -11,15 +11,15 @@ from shapeshifter.views import MultiFormView
 
 # Create your views here.
 
-class SalesViewSolo(CreateView): #TEMP check if SalesVIEW is working
-    template_name = 'sales/register.html'    
-    # model = Sales
-    form_class = SalesForm    
-    context_object_name = 'sales'
-    
-def SalesView(request):
+def SalesView(request, pk):
     sales_form = SalesForm()
-    saleslist_form = SalesListForm()
+    
+    if pk!=0:
+        product_item = get_object_or_404(Products, pk=pk)
+        saleslist_form = SalesListForm(initial={'Item': product_item})
+    else:
+        saleslist_form = SalesListForm()
+    
     added_item = tempSalesList.objects.all()
     product_count = tempSalesList.objects.count()
     qty = tempSalesList.objects.all().aggregate(total_qty=Sum('Quantity'))  
@@ -42,18 +42,23 @@ def SalesView(request):
     
     if request.method == 'POST': #IF POSTED
         if request.POST.get("button_add"): #if button ADD is called
-            temp_saleslist = SalesListForm(request.POST)          
+            temp_saleslist = SalesListForm(request.POST) #SalesListForm is in tempsaleslist model
             
             if temp_saleslist.is_valid():    #IF VALID  
                 frm_qty = temp_saleslist.cleaned_data['Quantity']
                 frm_item = temp_saleslist.cleaned_data['Item']
-                item_qty = frm_item.Quantity                
+                item_qty = frm_item.Quantity
+                print(f'form item : {frm_item}')
                 
                 if frm_qty > 0 and frm_qty <= item_qty : #if 0 
+                    savelist = temp_saleslist.save(commit=False)
+                    confirm_item = Products.objects.get(pk = frm_item.pk)
+                    print(f'checked item is : {confirm_item}')
                     
-                    temp_saleslist.save() # << item add SUCCESS HERE
+                    savelist.Item = confirm_item
+                    savelist.save() # <<<<<<<<<<<<<<<<<<< item add SUCCESS HERE
                     messages.success(request, "added")   
-                    return redirect('sales-register')
+                    return redirect('sales-register', 0)
 
                 else:
                     messages.info(request, f"Invalid Quantity. Maximum Quantity is {item_qty}")                 
@@ -93,7 +98,7 @@ def SalesView(request):
                     
                 tempSalesList.objects.all().delete() # templist DELETED
                 messages.success(request, f'Items Saved')
-                return redirect('sales-register')
+                return redirect('sales-register', 0)
 
             else:
                 messages.info(request, f"Invalid form {sales_info.errors}. {total_qty}")
@@ -113,7 +118,7 @@ def ListItemDelete(request, pk):
     item = tempSalesList.objects.only('Item').get(pk=pk).Item
     messages.success(request, f'{item} deleted.')      
     tempSalesList.objects.filter(id=pk).delete()    
-    return redirect('sales-register')
+    return redirect('sales-register', 0)
 
 def itemAdd(request, pk):
     item = tempSalesList.objects.get(pk=pk)
@@ -129,7 +134,7 @@ def itemAdd(request, pk):
     else:
         messages.info(request, 'max qty reached')
     
-    return redirect('sales-register')
+    return redirect('sales-register', 0)
 
 def itemDeduct(request, pk):
     item = tempSalesList.objects.get(pk=pk)
@@ -143,4 +148,16 @@ def itemDeduct(request, pk):
     else:
         messages.info(request, 'min qty reached')
     
-    return redirect('sales-register')
+    return redirect('sales-register', 0)
+
+def SalesSummary(request): #TEMP GETTING OBSOLETE
+    sales = Sales.objects.all()
+    # search_form = ProductFilterForm()
+    
+    context = {
+        'sales' : sales,
+        'title': 'Sales Summary',
+        # 'search_form':search_form,
+    }
+    
+    return render(request, 'sales/sales-summary.html', context)

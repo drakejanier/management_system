@@ -50,9 +50,9 @@
                 <li>
                   <a href="{% url 'product-list' %}">Product List</a>
                 </li>
-                <li>
+                {% comment %} <li>
                   <a href="{% url 'purchase-view'%}">Purchase</a>
-                </li>
+                </li> {% endcomment %}
                 <li>
                   <a href="{% url 'purchase-list' %}">Purchase List</a>
                 </li>
@@ -64,10 +64,10 @@
               <a href="#sales-submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> <i class="fas fa-cash-register nav-icn"></i> Sales</a>
               <ul class="collapse list-unstyled" id="sales-submenu">
                 <li>                  
-                  <a href="{% url 'sales-register' %}">Sales</a>
+                  <a href="{% url 'sales-register' 0 %}">Sales</a>
                 </li>  
                 <li>
-                  <a href="#">Report</a>
+                  <a href="{% url 'sales-summary' %}">Sales Summary</a>
                 </li>
               </ul>
             </li>
