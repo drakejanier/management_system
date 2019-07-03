@@ -1,0 +1,82 @@
+{% extends 'inventory/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+
+<div class="card content-card col-md-12 mx-auto p-0">
+    <form action="" method="GET" >
+
+        {% csrf_token %}
+        {% comment %} PRODUCTS FORM 
+        <div class="form-group col-md-12 mb-0">                
+            <div class="form-row mx-auto">
+                <div class="col-md-3 mb-0">                
+                    {{ search_form.Name|as_crispy_field }}
+                </div>
+                <div class=" col-md-3 mb-0">
+                    {{ search_form.Unit|as_crispy_field }}
+                </div>
+                <div class="col-md-3 mb-0">
+                    {{ search_form.Category|as_crispy_field }}
+                </div>
+                <div class="col-md-3 mb-0 mt-4" name="ButtonHolder">                
+                    <button type="submit" class="btn btn-primary col-md-12 mt-3" name="button">Search</button>   
+                </div>                
+            </div>            
+        </div> {% endcomment %}
+
+        {% comment %} <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Search</legend>
+                {{ search_form|crispy }}
+        </fieldset> {% endcomment %}
+        
+    </form>
+</div>
+<div class="card content-card mt-3 fade-up">
+    <div class="card-header bg-dark text-white">{{ title }}</div>
+
+    <table class="table table-hover" id="product-table">
+        <thead>
+            <th>OR</th>
+            <th>Customer</th>
+            <th>Total_Sales</th>
+            <th>Date_Sold</th>
+            <th>User</th>  
+            <th></th>
+            <th></th>  
+        </thead>
+
+        <tbody>
+            {% for item in sales %}
+            
+            <tr>
+                <td>{{ item.OR }}</td>
+                <td>{{ item.Customer }}</td>
+                <td>{{ item.Total_Sales }}</td>
+                <td>{{ item.Date_Sold }}</td>
+                <td>{{ item.User }}</td>
+
+                
+                <td>
+                    <a href="{% url 'sales-register' item.pk %}" class="btn btn=sm" role="button"><i class="fas fa-cash-register"></i></a>
+                </td>
+                <td>
+                    <a href="{% url 'purchase-view-pk' item.pk %}" class="btn btn=sm" role="button"><i class="fas fa-plus"></i></a>
+                </td>
+                <td>
+                    <a href="{% url 'product-delete' item.pk %}" class="btn btn=sm" role="button"><i class="fas fa-trash-alt"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="container text-right pb-3">        
+        <div class="mx-4"><a href="{% url 'product-new' %}" class="btn btn-primary btn-md" role="button">Purchase New Product</a></div>
+    </div>        
+
+</div>
+
+
+
+{% endblock %}

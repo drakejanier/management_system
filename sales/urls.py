@@ -9,5 +9,6 @@ urlpatterns = [
     path('list-item-add/<int:pk>/', views.itemAdd, name='list-item-add'),
     path('list-item-deduct/<int:pk>/', views.itemDeduct, name='list-item-deduct'),
     
+    path('sales-summary/', views.SalesSummary, name='sales-summary'),
     # url(r'^items-autocomplete/$', getItemList.as_view(), name='items-autocomplete',), #move to inventory
 ]

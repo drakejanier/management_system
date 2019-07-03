@@ -149,3 +149,15 @@ def itemDeduct(request, pk):
         messages.info(request, 'min qty reached')
     
     return redirect('sales-register', 0)
+
+def SalesSummary(request): #TEMP GETTING OBSOLETE
+    sales = Sales.objects.all()
+    # search_form = ProductFilterForm()
+    
+    context = {
+        'sales' : sales,
+        'title': 'Sales Summary',
+        # 'search_form':search_form,
+    }
+    
+    return render(request, 'sales/sales-summary.html', context)
