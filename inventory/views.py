@@ -122,9 +122,9 @@ class PurchaseViewItem(CreateView): #Purchase with item
         Purchase.User = self.request.user
         Purchase.save()
         
-        print(f'prd : {product_item.pk} ')
         add_item = Products.objects.get(pk = product_item.pk) 
         add_item.Quantity = int(add_item.Quantity) + int(Purchase.Quantity)
+        add_item.User = self.request.user
         add_item.save() #1
         
         messages.success(self.request,f'Item added. {product_item}')
@@ -141,11 +141,13 @@ def PurchaseNewItem(request):
             frm_qty = purchase_form.cleaned_data['Quantity']
             product_item = product_form.save(commit=False)     
             product_item.Quantity = frm_qty
+            product_item.User = request.user
             product_item = product_form.save()
             
             Purchase = purchase_form.save(commit=False)
             
             Purchase.Item = product_item
+            Purchase.User = request.user
             Purchase.save()
             
             messages.success(request, f'Saved {product_item}.')

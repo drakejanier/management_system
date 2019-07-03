@@ -1,0 +1,1 @@
+web: gunicorn Management_System.wsgi

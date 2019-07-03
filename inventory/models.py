@@ -23,7 +23,7 @@ class Products(models.Model):
         ('others','Others'),
     )
     Category = models.ForeignKey('Category', on_delete=models.CASCADE)
-    User = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    User = models.ForeignKey(User, on_delete=models.CASCADE)
     
     class Meta:
         verbose_name_plural = "Products"
@@ -68,7 +68,7 @@ class Purchase(models.Model): #should be changed to ITEMS model
     Cost = models.DecimalField(max_digits=6, decimal_places=2, default=0)
     Total_Cost = models.IntegerField(default=0)
     Date_Purchased = models.DateTimeField(default=datetime.now)
-    User = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    User = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def __str__(self):
         return '{0} {1}'.format(self.Item, self.Cost)

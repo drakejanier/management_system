@@ -11,7 +11,7 @@ class Sales(models.Model):
     Total_Sales = models.IntegerField(default=0, null=True)
     Date_Sold = models.DateTimeField(default=datetime.now)
     Date_Recorded = models.DateTimeField(default=datetime.now)
-    User = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    User = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.Customer
