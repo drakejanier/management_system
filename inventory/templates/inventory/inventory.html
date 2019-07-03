@@ -59,6 +59,9 @@
                 <td>{{ item.Category }}</td>
                 
                 <td>
+                    <a href="{% url 'purchase-view-pk' item.pk %}" class="btn btn=sm" role="button"><i class="fas fa-cash-register"></i></a>
+                </td>
+                <td>
                     <a href="{% url 'purchase-view-pk' item.pk %}" class="btn btn=sm" role="button"><i class="fas fa-plus"></i></a>
                 </td>
                 <td>
@@ -73,7 +76,6 @@
         <div class="mx-4"><a href="{% url 'product-new' %}" class="btn btn-primary btn-md" role="button">Purchase New Product</a></div>
     </div>        
 
-    
 </div>
 
 

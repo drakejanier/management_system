@@ -42,16 +42,21 @@ def SalesView(request):
     
     if request.method == 'POST': #IF POSTED
         if request.POST.get("button_add"): #if button ADD is called
-            temp_saleslist = SalesListForm(request.POST)          
+            temp_saleslist = SalesListForm(request.POST) #SalesListForm is in tempsaleslist model
             
             if temp_saleslist.is_valid():    #IF VALID  
                 frm_qty = temp_saleslist.cleaned_data['Quantity']
                 frm_item = temp_saleslist.cleaned_data['Item']
-                item_qty = frm_item.Quantity                
+                item_qty = frm_item.Quantity
+                print(f'form item : {frm_item}')
                 
                 if frm_qty > 0 and frm_qty <= item_qty : #if 0 
+                    savelist = temp_saleslist.save(commit=False)
+                    confirm_item = Products.objects.get(pk = frm_item.pk)
+                    print(f'checked item is : {confirm_item}')
                     
-                    temp_saleslist.save() # << item add SUCCESS HERE
+                    savelist.Item = confirm_item
+                    savelist.save() # <<<<<<<<<<<<<<<<<<< item add SUCCESS HERE
                     messages.success(request, "added")   
                     return redirect('sales-register')
 

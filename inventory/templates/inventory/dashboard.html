@@ -61,7 +61,7 @@
     </div>
 
     {% comment %} ~~~~~~~~~~~~ SALES ~~~~~~~~~~~~ {% endcomment %}
-    <div class="card content-card-2 col-md-5 mx-auto fade-up px-0">
+    <div class="card content-card col-md-5 mx-auto fade-up px-0">
         <div class="card-header">Sales Today</div>
         <div class="card-body p-2">
 
@@ -78,7 +78,7 @@
                         <li class="nav-item col-4 "> 
                             <strong> {{ sales_item.Item.Name }} </strong> 
                             <br>
-                            <span class="item-desc"> {{ sales_item.List_Price|intcomma }} | {{ sales_item.Item.Item.Unit }} </span> 
+                            <span class="item-desc"> {{ sales_item.Item.List_Price|intcomma }} | {{ sales_item.Item.Unit }} </span> 
                         </li>
                         <li class="nav-item col-2 text-center"> {{ sales_item.Quantity }} </li>
                         <li class="nav-item col-3 text-right"> {{ sales_item.Total_Item_Price|intcomma }} </li>

@@ -22,7 +22,7 @@ class Sales(models.Model):
 
 class SalesList(models.Model):
     SalesID = models.ForeignKey(Sales, on_delete=models.CASCADE)
-    Item = models.OneToOneField(Products, on_delete=models.CASCADE, unique=True)
+    Item = models.ForeignKey(Products, on_delete=models.CASCADE)
     Quantity = models.IntegerField(default=0)
     Total_Item_Price = models.DecimalField(max_digits=6, decimal_places=2, default=0)
     
