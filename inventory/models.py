@@ -13,15 +13,15 @@ class Products(models.Model):
     Unit = models.CharField(max_length=50)
     Quantity = models.IntegerField(default=0)
     List_Price = models.DecimalField(max_digits=8, decimal_places=2)
-    CategoryOpt = (
-        ('food','Food'),
-        ('medicine','Medicine'),
-        ('treats','Treats'),
-        ('accessories','Accessories'),
-        ('soap','Soap'),
-        ('cologne','Cologne'),
-        ('others','Others'),
-    )
+    # CategoryOpt = (
+    #     ('food','Food'),
+    #     ('medicine','Medicine'),
+    #     ('treats','Treats'),
+    #     ('accessories','Accessories'),
+    #     ('soap','Soap'),
+    #     ('cologne','Cologne'),
+    #     ('others','Others'),
+    # )
     Category = models.ForeignKey('Category', on_delete=models.CASCADE)
     User = models.ForeignKey(User, on_delete=models.CASCADE)
     

@@ -9,23 +9,35 @@ from django.contrib import messages
 from django.views.generic import ListView, DetailView, CreateView, UpdateView,TemplateView
 from django.views.generic.edit import FormView
 from django.urls import reverse
-from .forms import PurchaseForm, ProductForm, ProductFilterForm,PurchaseItemForm
+from .forms import PurchaseForm, ProductForm, ProductFilterForm,PurchaseItemForm, SearchItemForm
 from datetime import datetime, date
 
 # Create your views here.
 
 def home(request):
-    if request.user.is_authenticated:        
+    if request.user.is_authenticated:
+        
+        search_request = request.GET.get('Item') #get searches
+        if search_request:
+            print(f"GET requested : {search_request}")
+            search_item = Products.objects.get(pk=search_request)
+            print(f"item searched as : {search_item}")
+        else:
+            search_item = ''
+            
         purchases_today = Purchase.objects.filter(Date_Purchased__date=date.today())  
         sales_today = SalesList.objects.filter(SalesID__Date_Sold__date=date.today())  
+        search_form = SearchItemForm()
         
-        print(purchases_today.count())
+        # print(purchases_today.count())
         context = { 
             'purchases' : purchases_today,
             'total_purchases': purchases_today.aggregate(Sum('Total_Cost'))['Total_Cost__sum'] or 0.00,
             'sales' : sales_today,
             'total_sales' : sales_today.aggregate(Sum('Total_Item_Price'))['Total_Item_Price__sum'] or 0.00,
             'title': 'Home', 
+            'searchbox' : search_form,
+            'search_item' : search_item,
             }
         
         return render(request, 'inventory/dashboard.html', context)
@@ -87,7 +99,8 @@ class PurchasesListView(ListView):
     model = Purchase
     queryset = Purchase.objects.order_by('-Date_Purchased')
     template_name = 'inventory/purchase-list.html'
-    context_object_name = 'purchases'    
+    context_object_name = 'purchases'
+    paginate_by = 5
     
 def PurchaseView(request): #if Purchase is clicked
     context = {
@@ -113,7 +126,7 @@ class PurchaseViewItem(CreateView): #Purchase with item
         
     def form_valid(self, form):
         form_pk = form.cleaned_data['Items']
-        print(f'form pk : {form_pk}')
+        # print(f'form pk : {form_pk}')
         product_item = form.cleaned_data['Items']
         
         Purchase = form.save(commit=False)
@@ -133,7 +146,7 @@ class PurchaseViewItem(CreateView): #Purchase with item
 def PurchaseNewItem(request):
     
     if request.method == 'POST':
-        print(f'posted')
+        # print(f'posted')
         product_form = ProductForm(request.POST)
         purchase_form = PurchaseForm(request.POST)
         

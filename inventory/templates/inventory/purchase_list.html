@@ -1,18 +1,18 @@
 {% extends 'inventory/base.html' %}
 
 {% block body %}
-<div class="card content-card fade-up">
-    <div class="card-header bg-dark text-white">{{ title }}</div>
+<div class="card content-card col-12 px-0">
+    <div class="card-header mx-0"><h4>Purchase Summary</h4></div>
     
     <table class="table table-hover" id="product-table">
-        <thead class="thead-dark tbl-head">
-            <th>ID</th>
+        <thead class="">
+            <th class="d-none d-lg-table-cell">ID</th>
             <th>Item</th>
-            <th>Supplier</th>
-            <th>Quantity</th>
-            <th>Cost</th>
+            <th class="d-none d-md-table-cell">Supplier</th>
+            <th>Stock</th>
+            <th>Total</th>
             <th>Date</th>  
-            <th>User</th>
+            <th class="d-none d-sm-table-cell">User</th>
             {% if request.user.is_superuser %}
                 <th>User</th>
             {% endif %}    
@@ -23,16 +23,28 @@
             {% for item in purchases %}
             
             <tr>
-                <td>{{ item.pk }}</td>
+                <td class="d-none d-lg-table-cell">{{ item.pk }}</td>
                 <td>{{ item.Item }}</td>
-                <td>{{ item.Supplier }}</td>
-                <td>{{ item.Quantity }}</td>
-                <td>{{ item.Cost }}</td>
-                <td>{{ item.Date_Purchased }}</td>
-                <td>{{ item.User }}</td>                
+                <td class="d-none d-md-table-cell">{{ item.Supplier }}</td>
+                <td>{{ item.Quantity }}</td>      
+
+                <td data-toggle="tooltip" data-placement="top" 
+                title="Price : {{ item.Cost }}">
+                    {{ item.Total_Cost }}
+                </td>
+                
+                <td data-toggle="tooltip" data-placement="top" 
+                title="{{item.Date_Purchased|date:"g:ia"}}">
+                    {{ item.Date_Purchased|date:"m/d/y" }}
+                </td>
+                <td class="d-none d-sm-table-cell">{{ item.User }}</td> 
+
                 {% if request.user.is_superuser %}
                     <td>
-                        <a href="{% url 'purchase-delete' item.pk %}" class="btn btn=sm" role="button"><i class="fas fa-trash-alt"></i></a>
+                        <a href="{% url 'purchase-delete' item.pk %}" 
+                        class="btn btn=sm" role="button">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
                     </td>
                 {% endif %}        
                 
@@ -40,12 +52,41 @@
             {% endfor %}
         </tbody>
     </table>
-    
+
+    {% if is_paginated %}
+        <nav class="mx-auto">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a href="?page=1" class="page-link"><i class="fas fa-fast-backward"></i></a></li>
+                    <li class="page-item"><a href="?page={{ page_obj.previous_page_number }}" class="page-link"><strong>PREV</strong> </a></li>
+                {% else %}    
+                    <li class="page-item disabled"><span class="page-link"><i class="fas fa-fast-backward"></i></span></li>
+                    <li class="page-item disabled"><span class="page-link">PREV</span></li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}                    
+                    {% if page_obj.number == num %}
+                        <li class="page-item active"><a href="?page={{ num }}" class="page-link">{{ num }}</a></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item"> <a href="?page={{ num }}" class="page-link">{{ num }}</a> </li>                        
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a href="?page={{ page_obj.next_page_number }}" class="page-link"><strong>NEXT</strong></a></li>            
+                    <li class="page-item"><a href="?page={{ page_obj.paginator.num_pages }}" class="page-link"><i class="fas fa-fast-forward"></i></a></li>  
+                {% else %}    
+                    <li class="page-item disabled"><span class="page-link">NEXT</span></li>
+                    <li class="page-item disabled"><span class="page-link"><i class="fas fa-fast-forward"></i></span></li>
+                {% endif %}
+            </ul>
+        </nav>        
+    {% endif %}
+
     <div class="container">        
         <div class="col-2 float-right mx-4"><a href="{% url 'product-new' %}" class="btn btn-primary btn-md" role="button">Purchase New Product</a></div>
         <div class="col-1 float-right "><a href="" class="btn btn-primary " data-toggle="modal" data-target="#giignan" >ay pislita</button></a> 
-    </div>       
-
+    </div>
     
 </div>
 

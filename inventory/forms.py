@@ -50,3 +50,18 @@ class ProductFilterForm(forms.ModelForm):
             )
         )
 
+class SearchItemForm(forms.Form):    
+    
+    
+    Item = forms.ModelChoiceField( #check FIELD (Items)      
+        queryset=Products.objects.all(), #check MODEL
+        required=False,
+        widget=autocomplete.ModelSelect2(url='items-autocomplete',attrs={'autocomplete':'off','data-placeholder': 'Search Item',}),
+    )
+
+    def __init__(self, *args, **kwargs):
+        
+        self.helper = FormHelper()
+        self.helper.form_show_labels = False
+        # self.helper.add_input(Submit('submit', 'Submit', css_class='btn-primary'))      
+        super(SearchItemForm, self).__init__(*args, **kwargs)

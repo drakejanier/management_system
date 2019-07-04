@@ -1,11 +1,67 @@
 {% extends 'inventory/base.html' %}
+{% load crispy_forms_tags %}
+{% crispy searchbox form.helper %}
 
 {% block body %}
 {% load humanize %}
 
-{% comment %} ~~~~~~~ PURCHASES ~~~~~~~~~~~ {% endcomment %}
 <div class="row">
-    <div class="card content-card col-md-5 p-0 mx-auto fade-up">
+    <div class="card content-card col-md-5 p-0 mx-auto">
+        
+        <div class="card-header"> Search Item </div>
+        <div class="card-body searchbox">
+            {% csrf_token %}
+            {{ searchbox.media }}
+            <form action="" method="get" >                
+                {% comment %} {{ searchbox|crispy}} {% endcomment %}
+                <div class="input-group">
+                    {% crispy searchbox %}
+                    <span class="input-group-btn">
+                        <button class="btn btn-info" type="Submit">Search</button>
+                    </span>
+                </div>
+            </form>
+            
+            
+            {% if search_item %}
+            <hr>
+            <div class="card item-card mt-1">
+                <a href="" class="p-1">
+                    <ul class=" nav list-title">
+                        <li class="nav-item col-sm-6 "> 
+                            <h6 class="item-desc text-muted"> Item </h6>
+                            <strong> {{ search_item.Name }} </strong> 
+
+                            <span class="item-desc"> <strong> P {{ search_item.List_Price|intcomma|floatformat:2 }} </strong> | {{ search_item.Unit }} </span> 
+                        </li>
+                        <li class="nav-item  text-center col-sm-2"> 
+                            <h6 class="item-desc text-muted"> Stock </h6>
+                            {{ search_item.Quantity }} 
+                        </li>
+                        <li class="nav-item col-sm-4"> 
+                            <h6 class="item-desc text-muted"> Category </h6> 
+                            {{ search_item.Category }}
+                        </li>
+                        
+                        {% comment %} <li class="nav-item "> <a href="" class="z">Buy</a> </li>
+                        <li class="nav-item "> <a href="">Sell</a> </li> {% endcomment %}
+                    </ul>
+                </a>
+                <div class="btn-group col-md-12 px-0 text-center" role="group" aria-label="Basic example">
+                    <a href="{% url 'purchase-view-pk' search_item.pk %}" class="btn btn-primary col-md-4">Buy</a>
+                    <a href="{% url 'sales-register' search_item.pk %}" class="btn btn-primary col-md-4">Sell</a>
+                    <a href="{% url 'dashboard' %}" class="btn btn-primary col-md-4">Clear</a>
+                </div>
+            </div>
+            
+            
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div class="row mt-5">
+    {% comment %} ~~~~~~~ PURCHASES ~~~~~~~~~~~ {% endcomment %}
+    <div class="card content-card col-md-5 p-0 mx-auto">
         <div class="card-header"> Purchases Today </div>
         <div class="card-body p-2">
 
@@ -38,7 +94,7 @@
         <div class="card-footer text-muted">
             <div class="row text-right">
                 <div class="col-sm-3">
-                    <a href="{% url 'purchase-view' %}" 
+                    <a href="{% url 'product-list' %}" 
                         class="btn btn-info btn-sm " 
                         role="button" 
                         data-toggle="tooltip" data-placement="right" 
@@ -48,12 +104,12 @@
                 </div>
                 
                 <div class="col-sm-4">
-                    <a href="{% url 'purchase-list' %}" 
+                    <a href="{% url 'product-new' %}" 
                         class="btn btn-outline-info btn-sm " 
                         role="button" 
                         data-toggle="tooltip" data-placement="right" 
-                        title="View Purchase List">
-                        View Purchases
+                        title="Purchase New">
+                        Add new product
                     </a>
                 </div>
             </div>
@@ -61,7 +117,7 @@
     </div>
 
     {% comment %} ~~~~~~~~~~~~ SALES ~~~~~~~~~~~~ {% endcomment %}
-    <div class="card content-card col-md-5 mx-auto fade-up px-0">
+    <div class="card content-card col-md-5 mx-auto px-0">
         <div class="card-header">Sales Today</div>
         <div class="card-body p-2">
 
@@ -94,7 +150,5 @@
         </div>
     </div>    
 </div>
-
-
 
 {% endblock %}

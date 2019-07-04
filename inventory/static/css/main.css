@@ -1,6 +1,31 @@
 /* CUSTOM STYLES 
     h4 -card titles
+    h6 - very small
 */
+
+
+/* 
+##Device = Tablets, Ipads (portrait)
+##Screen = B/w 768px to 1024px
+*/
+@media (min-width: 768px) and (max-width: 1024px) { body {font-size: 1fr} }
+
+/* 
+##Device = Tablets, Ipads (landscape)
+##Screen = B/w 768px to 1024px
+*/
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) { body {font-size: 0.8fr} }
+
+/* 
+##Device = Low Resolution Tablets, Mobiles (Landscape) */
+@media (min-width: 481px) and (max-width: 767px) { body {font-size: 0.3fr} }
+
+/* ##Device = Most of the Smartphones Mobiles (Portrait) */
+@media (min-width: 320px) and (max-width: 480px) { 
+    body {font-size: 0.1fr} 
+}
+
 .form-control{    
     width:90%;
 }
@@ -9,6 +34,12 @@
     height: 38px !important;
     min-width:200px !important;
     width:200px !important;
+}
+.btn-grad {
+    background-image: linear-gradient(to right, #2fa7ed 0%, #2F80ED 51%, #2fb7ed 100%)
+}
+.btn-grad:hover { 
+    background-position: right center; 
 }
 .content-card{    
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
@@ -37,8 +68,12 @@
     background:#fff;
     font-size:1em;   
 }
+
 .item-desc{
     display:none;
+}
+.item-desc .text-muted {
+    font-size:3px !important;
 }
 .item-card:hover .item-desc{
     display:block;  
@@ -64,6 +99,10 @@ h4{
     font-weight: 300;
 }
 
+h6{
+    font-size:0.8em;
+    font-weight: 400;
+}
 .card p {
     line-height: 1.5em;
 }
