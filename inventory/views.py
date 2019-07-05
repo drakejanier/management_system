@@ -51,8 +51,7 @@ class SearchProducts(ListView):
     model = Products
     context_object_name = 'items'
     paginate_by = 5
-    
-    
+        
     def get_context_data(self, **kwargs):
         search_form = ProductFilterForm()
         context = super(SearchProducts, self).get_context_data(**kwargs)
@@ -101,6 +100,37 @@ class SearchProducts(ListView):
             
         return qsearch
 
+class ProductDetail(DetailView):
+    model = Products
+    template_name = 'inventory/product_details.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all()
+        return context
+    
+class ProductUpdate(UpdateView):  
+    form_class = ProductForm
+    template_name = 'inventory/product_details.html'
+    queryset = Products.objects.all()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all().values('Name')
+        return context
+    
+    def get(self, request, **kwargs):
+        self.object = ProductUpdate.objects.get(id=self.request.id)
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        context = self.get_context_data(object=self.object, form=form)
+        return self.render_to_response(context)
+
+    def get_object(self, queryset=None):
+        obj = Products.objects.get(id=self.kwargs['id'])
+        return obj
+    
+    
 class PurchasesListView(ListView):
     model = Purchase
     queryset = Purchase.objects.order_by('-Date_Purchased')

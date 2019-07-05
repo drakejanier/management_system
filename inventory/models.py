@@ -13,15 +13,6 @@ class Products(models.Model):
     Unit = models.CharField(max_length=50)
     Quantity = models.IntegerField(default=0)
     List_Price = models.DecimalField(max_digits=8, decimal_places=2)
-    # CategoryOpt = (
-    #     ('food','Food'),
-    #     ('medicine','Medicine'),
-    #     ('treats','Treats'),
-    #     ('accessories','Accessories'),
-    #     ('soap','Soap'),
-    #     ('cologne','Cologne'),
-    #     ('others','Others'),
-    # )
     Category = models.ForeignKey('Category', on_delete=models.CASCADE)
     User = models.ForeignKey(User, on_delete=models.CASCADE)
     
@@ -73,8 +64,7 @@ class Purchase(models.Model): #should be changed to ITEMS model
     def __str__(self):
         return '{0} {1}'.format(self.Item, self.Cost)
     
-    def get_absolute_url(self):
-        
+    def get_absolute_url(self):        
         return reverse('product-list')
     
 

@@ -63,11 +63,12 @@
         </thead>
 
         <tbody>
-            {% for item in items %}
+            {% for item in items %}            
+            
             
             <tr>
                 <td class="d-none d-lg-table-cell">{{ item.pk }}</td>
-                <td>{{ item.Name }}</td>
+                    <td><a href="{% url 'product-details' item.pk %}"><strong>{{ item.Name }}</strong></a></td>
                 <td>{{ item.Unit }}</td>
                 <td>{{ item.Quantity }}</td>
                 <td>{{ item.List_Price }}</td>
@@ -83,6 +84,9 @@
                     <a href="{% url 'product-delete' item.pk %}" class="btn btn=sm" role="button"><i class="fas fa-trash-alt"></i></a>
                 </td>
             </tr>
+            
+                
+            
             {% endfor %}
         </tbody>
     </table>

@@ -50,8 +50,6 @@ class ProductFilterForm(forms.ModelForm):
         )
 
 class SearchItemForm(forms.Form):    
-    
-    
     Item = forms.ModelChoiceField( #check FIELD (Items)      
         queryset=Products.objects.all(), #check MODEL
         required=False,

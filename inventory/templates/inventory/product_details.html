@@ -1,0 +1,76 @@
+{% extends 'inventory/base.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+
+{% block body %}
+<div class="card content-card col-md-8 mx-auto p-0 fade-up">
+    <div class="card-header bg-blue-d text-white ">
+        <div class="row d-flex justify-content-between">
+            <div class="col-9 mx-0"><h4 class="text-white">Product Details</h4></div>
+            
+            <div class="col-2 d-flex flex-row-reverse">
+                <a href="{% url 'dashboard' %}" class="btn btn-sm btn-close p-0 text-right px-0 mx-0" role="button"><i class="fas fa-times"></i></a> 
+            </div> 
+        </div>    
+    </div>        
+
+    <div class="card-body">
+        <form action>
+        {% csrf_token %}
+            
+            <div class="form-group row"  id="NameBox">
+                <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                <div class="col-sm-10">     
+                    <div class="form-group">   
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">{{ products.pk }}</span>
+                            </div>
+                            <input type="text" class="form-control " id="inputName"  value="{{ products.Name }}">
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">                
+                <label for="inputCategory" class="col-sm-2 col-form-label">Category</label>
+                <div class="col-sm-10">
+                    <select class="form-control" id="inputCategory" >
+                        {% for cat in categories %}
+                            {% if cat.Name == products.Category.Name %}
+                                <option value="cat.Name" selected>{{cat.Name}}</option>
+                            {% else %}
+                                <option value="cat.Name">{{cat.Name}}</option>
+                            {% endif %}                            
+                        {% endfor %}                        
+                    </select>
+                </div>               
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="inputQuantity">Quantity</label>
+                    <input type="text" class="form-control" id="inputQuantity" value="{{ products.Quantity }}" >
+                </div>            
+                <div class="form-group col-md-5">
+                    <label for="inputUnit">Unit</label>
+                    <input type="text" class="form-control" id="inputUnit" value="{{ products.Unit }}" >
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="inputPrice">Price</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">P</span>
+                        </div>
+                        <input type="text" class="form-control text-right" id="inputPrice" value="{{ products.List_Price|intcomma|floatformat:2 }}">
+                    </div>                    
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Edit</button>
+        </form>
+    </div>
+    
+</div>
+
+{% endblock %}
