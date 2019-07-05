@@ -31,8 +31,7 @@ class ProductFilterForm(forms.ModelForm):
         model = Products
         fields = ['Name', 'Unit', 'Category']
         
-    def __init__(self, *args, **kwargs):
-        
+    def __init__(self, *args, **kwargs):        
         super(ProductFilterForm, self).__init__(*args, **kwargs)
         self.fields['Name'].required = False
         self.fields['Unit'].required = False

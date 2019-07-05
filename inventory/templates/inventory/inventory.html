@@ -1,13 +1,14 @@
 {% extends 'inventory/base.html' %}
 {% load crispy_forms_tags %}
+{% load humanize %}
 
 {% block body %}
 
+{% comment %} SEARCH {% endcomment %}
 <div class="card content-card col-md-12 mx-auto p-0">
     <form action="" method="GET" >
 
-        {% csrf_token %}
-        {% comment %} PRODUCTS FORM {% endcomment %}
+        {% csrf_token %}        
         <div class="form-group col-md-12 mb-0">                
             <div class="form-row mx-auto">
                 <div class="col-md-3 mb-0">                
@@ -24,25 +25,39 @@
                 </div>                
             </div>            
         </div>
-
-        {% comment %} <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Search</legend>
-                {{ search_form|crispy }}
-        </fieldset> {% endcomment %}
         
     </form>
 </div>
-<div class="card content-card mt-3 fade-up">
-    <div class="card-header bg-dark text-white">{{ title }}</div>
+
+<div class="card content-card mt-3 ">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-7"><h4>Product List</h4></div>
+            <div class="col-4 text-right">
+                <div class="btn-group col-md-12 px-0 text-center d-sm-inline-block d-lg-none">
+                    <a href="{% url 'product-new' %}" class="btn btn-outline-info btn-sm " role="button">+</a>
+                    <a href="" class="btn btn-outline-info btn-sm" role="button"><i class="fas fa-print"></i></a>
+                    
+                </div>
+                <div class="btn-group col-md-12 px-0 text-center d-none d-lg-inline-block">
+                    <a href="{% url 'product-new' %}" class="btn btn-outline-info btn-sm" role="button">Purchase New Product</a>
+                    <a href="" class="btn btn-outline-info btn-sm" role="button">Print</a>    
+                </div>
+            </div>
+            <div class="btn-group col-1 d-flex flex-row-reverse">
+                <a href="{% url 'dashboard' %}" class="btn btn-sm btn-close p-0 text-right" role="button"><i class="fas fa-times"></i></a> 
+            </div>    
+        </div>
+    </div>
 
     <table class="table table-hover" id="product-table">
         <thead>
-            <th>ID</th>
+            <th class="d-none d-lg-table-cell">ID</th>
             <th>Name</th>
             <th>Unit</th>
-            <th>Quantity</th>
-            <th>List Price</th>
-            <th>Category</th>  
+            <th>Stock</th>
+            <th>Price</th>
+            <th class="d-none d-lg-table-cell">Category</th>  
             <th></th>
             <th></th>  
         </thead>
@@ -51,33 +66,71 @@
             {% for item in items %}
             
             <tr>
-                <td>{{ item.pk }}</td>
+                <td class="d-none d-lg-table-cell">{{ item.pk }}</td>
                 <td>{{ item.Name }}</td>
                 <td>{{ item.Unit }}</td>
                 <td>{{ item.Quantity }}</td>
                 <td>{{ item.List_Price }}</td>
-                <td>{{ item.Category }}</td>
+                <td class="d-none d-lg-table-cell">{{ item.Category }}</td>
                 
-                <td>
+                <td class="d-none d-lg-table-cell">
                     <a href="{% url 'sales-register' item.pk %}" class="btn btn=sm" role="button"><i class="fas fa-cash-register"></i></a>
                 </td>
-                <td>
+                <td class="d-none d-lg-table-cell">
                     <a href="{% url 'purchase-view-pk' item.pk %}" class="btn btn=sm" role="button"><i class="fas fa-plus"></i></a>
-                </td>
-                <td>
+                </td class="d-none d-lg-table-cell">
+                <td class="d-none d-lg-table-cell">
                     <a href="{% url 'product-delete' item.pk %}" class="btn btn=sm" role="button"><i class="fas fa-trash-alt"></i></a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    {% comment %} TOTALS {% endcomment %}
+    <div class="row mb-2 text-center">
+        {% if total_assets %}
+            <div class=" col-7 "></div> 
+            <div class="col-5">
+                <div class="row">
+                    <div class=" col-6 "><span>Total Item : <strong>{{ total_qty }}</strong> </span></div> 
+                    <div class="col-6"><span>Total Assets : <strong> P {{ total_assets|intcomma }}</strong></span></div>    
+                </div>                       
+            </div>
+        {% endif %}       
+    </div>  
+
+    {% if is_paginated %}
+        <nav class="mx-auto">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a href="?page=1" class="page-link"><i class="fas fa-fast-backward"></i></a></li>
+                    <li class="page-item"><a href="?page={{ page_obj.previous_page_number }}" class="page-link"><strong>PREV</strong> </a></li>
+                {% else %}    
+                    <li class="page-item disabled"><span class="page-link"><i class="fas fa-fast-backward"></i></span></li>
+                    <li class="page-item disabled"><span class="page-link">PREV</span></li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}                    
+                    {% if page_obj.number == num %}
+                        <li class="page-item active"><a href="?page={{ num }}" class="page-link">{{ num }}</a></li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item"> <a href="?page={{ num }}" class="page-link">{{ num }}</a> </li>                        
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a href="?page={{ page_obj.next_page_number }}" class="page-link"><strong>NEXT</strong></a></li>            
+                    <li class="page-item"><a href="?page={{ page_obj.paginator.num_pages }}" class="page-link"><i class="fas fa-fast-forward"></i></a></li>  
+                {% else %}    
+                    <li class="page-item disabled"><span class="page-link">NEXT</span></li>
+                    <li class="page-item disabled"><span class="page-link"><i class="fas fa-fast-forward"></i></span></li>
+                {% endif %}
+            </ul>
+        </nav>        
+    {% endif %}
     
-    <div class="container text-right pb-3">        
-        <div class="mx-4"><a href="{% url 'product-new' %}" class="btn btn-primary btn-md" role="button">Purchase New Product</a></div>
-    </div>        
-
+    
 </div>
-
 
 
 {% endblock %}

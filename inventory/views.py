@@ -2,7 +2,7 @@ from dal import autocomplete
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Products, Category, Purchase
 from sales.models import Sales, SalesList
-from django.db.models import Avg, Count, Min, Sum
+from django.db.models import Avg, Count, Min, Sum, Q
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -43,32 +43,28 @@ def home(request):
         return render(request, 'inventory/dashboard.html', context)
     else:
         return redirect('login')
-    
 
-
-def ProductView(request): #TEMP GETTING OBSOLETE
-    items = Products.objects.all()
-    search_form = ProductFilterForm()
-    
-    context = {
-        'items' : items,
-        'title': 'Product List',
-        'search_form':search_form,
-    }
-    return render(request, 'inventory/inventory.html', context)
-
+def search_valid(param):
+    return param != '' and param is not None
 class SearchProducts(ListView):
     template_name = 'inventory/inventory.html'    
     model = Products
     context_object_name = 'items'
+    paginate_by = 5
+    
     
     def get_context_data(self, **kwargs):
-        search_form = ProductFilterForm()        
+        search_form = ProductFilterForm()
+        context = super(SearchProducts, self).get_context_data(**kwargs)
+        total_assets = self.get_queryset().aggregate(Sum('List_Price'))['List_Price__sum'] or 0.00
+        total_qty =  self.get_queryset().aggregate(Sum('Quantity'))['Quantity__sum'] or 0.00
+        print(f'total assets = {total_assets}')
         
-        context = super(SearchProducts, self).get_context_data(**kwargs)        
         context.update({    
             'title': 'Product List',
             'search_form':search_form,
+            'total_assets':total_assets,
+            'total_qty':total_qty,
         })
         return context
     
@@ -76,24 +72,34 @@ class SearchProducts(ListView):
         category_pk = self.request.GET.get('Category')
         search_name = self.request.GET.get('Name')
         search_unit = self.request.GET.get('Unit')
+        total_assets = 0
+        total_qty = 0
+            
+        qsearch = Products.objects.all()
+        qfilter =''
         
-        if search_name and search_unit and category_pk:
-            return Products.objects.filter(Name__icontains=search_name, Unit__icontains=search_unit, Category=category_pk)
-        elif search_name and search_unit:
-            return Products.objects.filter(Name__icontains=search_name, Unit__icontains=search_unit)
-        elif search_name and category_pk:
-            return Products.objects.filter(Name__icontains=search_name, Category=category_pk)
-        elif search_unit and category_pk:
-            return Products.objects.filter(Unit__icontains=search_unit, Category=category_pk)
-        elif category_pk:
-            return Products.objects.filter(Category=category_pk)
-        elif search_name:
-            return Products.objects.filter(Name__icontains=search_name)
-        elif search_unit:
-            return Products.objects.filter(Unit__icontains=search_unit)
-        else:
-            messages.info(self.request, f'')           
-            return Products.objects.all()
+        if search_valid(category_pk):
+            qfilter = Q(Category=category_pk)            
+        elif search_valid(search_name):
+            
+            if qfilter != '':
+                qfilter |= Q(Name__icontains=search_name) 
+            else:
+                qfilter = Q(Name__icontains=search_name)
+        elif search_valid(search_unit):            
+            if qfilter != '':
+                qfilter |= Q(Unit__icontains=search_unit) 
+            else:
+                qfilter = Q(Unit__icontains=search_unit)
+
+        
+        if qfilter != '':            
+            qsearch = qsearch.filter(qfilter)
+            # total_assets = qsearch.aggregate(Sum('List_Price'))['List_Price__sum'] or 0.00
+            # total_qty =  qsearch.aggregate(Sum('Quantity'))['Quantity__sum'] or 0.00
+
+            
+        return qsearch
 
 class PurchasesListView(ListView):
     model = Purchase
