@@ -1,13 +1,16 @@
 
 from django.contrib import messages
 from django.db.models import Sum
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template.loader import get_template
 from django.views.generic import ListView, CreateView, FormView, View
 from django.urls import reverse_lazy
 from .models import Sales, tempSalesList, SalesList
 from inventory.models import Products, Purchase
 from .forms import SalesForm,SalesListForm
 from shapeshifter.views import MultiFormView
+from inventory.utils import render_to_pdf
 
 # Create your views here.
 
@@ -150,14 +153,40 @@ def itemDeduct(request, pk):
     
     return redirect('sales-register', 0)
 
-def SalesSummary(request): #TEMP GETTING OBSOLETE
-    sales = Sales.objects.all()
-    # search_form = ProductFilterForm()
+# def SalesSummary(request): #TEMP GETTING OBSOLETE
+#     sales = Sales.objects.all()
+#     # search_form = ProductFilterForm()
     
-    context = {
-        'sales' : sales,
-        'title': 'Sales Summary',
-        # 'search_form':search_form,
-    }
+#     context = {
+#         'sales' : sales,
+#         'title': 'Sales Summary',
+#         # 'search_form':search_form,
+#     }
     
     return render(request, 'sales/sales-summary.html', context)
+
+class SalesSummary(ListView):
+    model = Sales
+    queryset = Sales.objects.order_by('-Date_Sold')
+    template_name = 'sales/sales-summary.html'
+    context_object_name = 'sales'
+    paginate_by = 5
+    
+    def post(self, request, *args, **kwargs):        
+        
+        if self.request.POST.get('btn-print') == 'btn-print':
+            print("print posted")
+            context = {
+                "items" : self.get_queryset(),
+            }
+
+            pdf= render_to_pdf('sales/pdf/saleslist_pdf.html', context)
+            if pdf:
+                response =  HttpResponse(pdf,content_type='application/pdf')
+                filename = "Sales_%s.pdf" %("1")
+                content = "inline; filename='%s'" %(filename)
+                response['Content-Disposition'] = content
+                return response
+            return HttpResponse("Not found")
+        else:
+            return self.get(request, *args, **kwargs)

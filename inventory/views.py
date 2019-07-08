@@ -216,6 +216,28 @@ class PurchasesListView(ListView):
     context_object_name = 'purchases'
     paginate_by = 5
     
+    def post(self, request, *args, **kwargs):        
+        
+        if self.request.POST.get('btn-print') == 'btn-print':
+            print("print posted")
+            # template = get_template('pdf/products_pdf.html')
+            # get_item_list = Products.objects.all()    
+            context = {
+                "items" : self.get_queryset(),
+            }
+            
+            # html = template.render(context)
+            pdf= render_to_pdf('pdf/purchases_pdf.html', context)
+            if pdf:
+                response =  HttpResponse(pdf,content_type='application/pdf')
+                filename = "Item_%s.pdf" %("12341231")
+                content = "inline; filename='%s'" %(filename)
+                response['Content-Disposition'] = content
+                return response
+            return HttpResponse("Not found")
+        else:
+            return self.get(request, *args, **kwargs)
+    
 def PurchaseView(request): #if Purchase is clicked
     context = {
         'form' : PurchaseForm(),

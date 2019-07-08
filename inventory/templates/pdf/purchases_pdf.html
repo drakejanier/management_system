@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>Product List</title>
+        <style type="text/css">
+            body {
+                font-weight: 200;
+                font-size: 11px;
+            }
+            .header {
+                font-size: 20px;
+                font-weight: 100;
+                text-align: center;
+                color: #007cae;
+            }
+            .title {
+                font-size: 22px;
+                font-weight: 100;
+                /* text-align: right;*/
+                padding: 10px 20px 0px 20px;  
+            }
+            .title span {
+                color: #007cae;
+            }
+            .details {
+                padding: 10px 20px 0px 20px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+            }
+            .hrItem {
+                border: none;
+                height: 1px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+            th{ 
+                background-color:#2980b9;
+                color:#ffffff;
+                font-size:13px;
+                padding-left:5px;
+                padding-right:5px;
+                padding-top:2px;
+                padding-bottom:2px;
+
+            }
+            td{
+                padding-left:5px;
+                padding-right:5px;
+                padding-top:2px;
+                padding-bottom:2px;
+                text-align:center;
+            }
+        </style>
+    </head>
+    <body>
+        {% load humanize %}
+
+        <div class='wrapper'>
+            <div class='header'>
+                <p class='title'>Purchases</p>
+            </div>
+        <div>
+        <div class='details'>
+            <table class="table" id="product-table" >
+                <thead >
+                    <th >ID</th>
+                    <th align="left">Name</th>
+                    <th >Supplier</th>
+                    <th >Stock</th>
+                    <th align="right">Cost</th>
+                    <th >Date</th>
+                    <th >User</th>  
+                </thead>
+
+                <tbody>
+                    {% for item in items %} 
+                    <tr>
+                        <td width="70">{{ item.pk }}</td>
+                        <td align="left"><strong>{{ item.Item }}</strong></td>
+                        <td width="150">{{ item.Supplier }}</td>
+                        <td width="80">{{ item.Quantity }}</td>
+                        <td align="right" width="200">{{ item.Total_Cost|floatformat:2|intcomma }}</td>
+                        <td width="300">{{ item.Date_Purchased|date:"m/d/y g:ia" }}</td>
+                        <td width="100">{{ item.User }}</td>
+                    </tr>                    
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </body>
+</html>
