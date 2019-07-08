@@ -6,13 +6,69 @@ from django.db.models import Avg, Count, Min, Sum, Q
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.views.generic import ListView, DetailView, CreateView, UpdateView,TemplateView
+from django.http import HttpResponse
+from django.views.generic import ListView, DetailView, CreateView, UpdateView,TemplateView, View
 from django.views.generic.edit import FormView
+from django.template.loader import get_template
 from django.urls import reverse
 from .forms import PurchaseForm, ProductForm, ProductFilterForm,PurchaseItemForm, SearchItemForm
 from datetime import datetime, date
+from .utils import render_to_pdf
 
-# Create your views here.
+
+def print_products(request): #Print Product List
+    template = get_template('pdf/products_pdf.html')
+    get_item_list = Products.objects.all()    
+    context = {
+        "items" : get_item_list,
+    }
+    
+    html = template.render(context)
+    pdf= render_to_pdf('pdf/products_pdf.html', context)
+    if pdf:
+        response =  HttpResponse(pdf,content_type='application/pdf')
+        filename = "Item_%s.pdf" %("12341231")
+        content = "inline; filename='%s'" %(filename)
+        response['Content-Disposition'] = content
+        return response
+    return HttpResponse("Not found")
+class GeneratePDF(View): #PRINT SAMPLE FOR CLASS VIEWS
+    def get(self, request, *args, **kwargs):
+        template = get_template('pdf/invoice.html')
+        context = {
+            "invoice_id" : 123,
+            "customer_name" : "Jerome Janier",
+            "amount" : 12333.99,
+            "today" : "Today",            
+        }
+        
+        html = template.render(context)
+        pdf= render_to_pdf('pdf/invoice.html', context)
+        if pdf:
+            response =  HttpResponse(pdf,content_type='application/pdf')
+            filename = "Invoice_%s.pdf" %("12341231")
+            content = "inline; filename='%s'" %(filename)
+            response['Content-Disposition'] = content
+            return response
+        return HttpResponse("Not found")
+
+def generate_pdf(request, *args, **kwargs): #PRINT SAMPLE FOR FUNCTIONS
+    template = get_template('pdf/invoice.html')
+    context = {
+        "invoice_id" : 123,
+        "customer_name" : "Jerome Janier",
+        "amount" : 12333.99,
+        "today" : "Today",            
+    }    
+    html = template.render(context)
+    pdf= render_to_pdf('pdf/invoice.html', context)
+    if pdf:
+        response =  HttpResponse(pdf,content_type='application/pdf')
+        filename = "Invoice_%s.pdf" %("12341231")
+        content = "inline; filename='%s'" %(filename)
+        response['Content-Disposition'] = content
+        return response
+    return HttpResponse("Not found")
 
 def home(request):
     if request.user.is_authenticated:
@@ -51,7 +107,29 @@ class SearchProducts(ListView):
     model = Products
     context_object_name = 'items'
     paginate_by = 5
+    
+    def post(self, request, *args, **kwargs):        
         
+        if self.request.POST.get('btn-print') == 'btn-print':
+            print("print posted")
+            template = get_template('pdf/products_pdf.html')
+            # get_item_list = Products.objects.all()    
+            context = {
+                "items" : self.get_queryset(),
+            }
+            
+            html = template.render(context)
+            pdf= render_to_pdf('pdf/products_pdf.html', context)
+            if pdf:
+                response =  HttpResponse(pdf,content_type='application/pdf')
+                filename = "Item_%s.pdf" %("12341231")
+                content = "inline; filename='%s'" %(filename)
+                response['Content-Disposition'] = content
+                return response
+            return HttpResponse("Not found")
+        else:
+            return self.get(request, *args, **kwargs)
+    
     def get_context_data(self, **kwargs):
         search_form = ProductFilterForm()
         context = super(SearchProducts, self).get_context_data(**kwargs)
