@@ -29,18 +29,18 @@
                     {% comment %} {{ item }} {% endcomment %}                    
                     <div class="card col-sm-12 mx-0 my-1 p-2">
                         <div class="row">
-                            <div class="col-sm-4"> 
+                            <div class="col-md-4"> 
                                 <h6> {{ item.get_Name }} </h6> 
                                 <p class = "mb-0"> {{ item.get_Unit }} |  {{ item.get_Price|floatformat:2 }} </p> 
                             </div> 
 
-                            <div class="com-sm-1"> <a href="{% url 'list-item-deduct' item.pk %}"> <i class="fas fa-minus-square"></i> </a> </div>
-                            <div class="col-sm-2 text-center"> <span>{{ item.Quantity }} / {{ item.get_limit }}</span> </div>                            
-                            <div class="com-sm-1"> <a href="{% url 'list-item-add' item.pk %}"> <i class="fas fa-plus-square"></i> </a> </div>
+                            <div class="com-md-1"> <a href="{% url 'list-item-deduct' item.pk %}"> <i class="fas fa-minus-square"></i> </a> </div>
+                            <div class="col-md-2 text-center"> <span>{{ item.Quantity }} / {{ item.get_limit }}</span> </div>                            
+                            <div class="com-md-1"> <a href="{% url 'list-item-add' item.pk %}"> <i class="fas fa-plus-square"></i> </a> </div>
 
-                            <div class="col-sm-3 text-right">P {{ item.get_total_item|floatformat:2 }}</div>
+                            <div class="col-md-3 text-right">P {{ item.get_total_item|floatformat:2 }}</div>
                 
-                            <div class="col-sm-1">
+                            <div class="col-md-1">
                                 <a href="{% url 'list-item-delete' item.pk %}" 
                                     role="button" name="delete-item" >
                                     <i class="fas fa-trash-alt"></i>
