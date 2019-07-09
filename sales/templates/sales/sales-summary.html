@@ -1,34 +1,31 @@
 {% extends 'inventory/base.html' %}
-{% load crispy_forms_tags %}
 
+{% load bootstrap4 %}
 {% block body %}
 
-<div class="card content-card col-md-12 mx-auto p-0">
-    <form action="" method="GET" >
-
+<div class="card content-card col-md-10 mx-auto p-3">
+    <form action="" method="GET" >        
         {% csrf_token %}
-        {% comment %} PRODUCTS FORM 
-        <div class="form-group col-md-12 mb-0">                
-            <div class="form-row mx-auto">
-                <div class="col-md-3 mb-0">                
-                    {{ search_form.Name|as_crispy_field }}
+        {% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+        {{ search_form.media }}
+        
+        <div class="row">
+            <div class="input-group col-md-4">
+                From
+                {{ search_form.date_start }}                
+            </div>
+            <div class="input-group col-md-4">
+                <span>To</span>
+                {{ search_form.date_start }}
+            </div>
+            <div class="input-group col-md-4">
+                <span class="spacer">.</span>
+                <div class="input-group">
+                    <a href="" class="btn btn-primary col-12 " role="button"><i class="fas fa-search"></i> Search</a>
                 </div>
-                <div class=" col-md-3 mb-0">
-                    {{ search_form.Unit|as_crispy_field }}
-                </div>
-                <div class="col-md-3 mb-0">
-                    {{ search_form.Category|as_crispy_field }}
-                </div>
-                <div class="col-md-3 mb-0 mt-4" name="ButtonHolder">                
-                    <button type="submit" class="btn btn-primary col-md-12 mt-3" name="button">Search</button>   
-                </div>                
-            </div>            
-        </div> {% endcomment %}
-
-        {% comment %} <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Search</legend>
-                {{ search_form|crispy }}
-        </fieldset> {% endcomment %}
+                
+            </div>
+        </div>
         
     </form>
 </div>
@@ -57,6 +54,7 @@
 
     <table class="table table-hover" id="product-table">
         <thead>
+            <th>ID</th>
             <th>OR</th>
             <th>Customer</th>
             <th>Total Sales</th>
@@ -69,12 +67,13 @@
         <tbody>
             {% for item in sales %}
             
-            <tr>
+            <tr class="table-row" data-href="{% url 'sales-details' item.pk%}" >
+                <td>{{ item.pk }}</td>
                 <td>{{ item.OR }}</td>
                 <td>{{ item.Customer }}</td>
                 <td>{{ item.Total_Sales }}</td>
                 <td data-toggle="tooltip" data-placement="top" 
-                title="{{item.Date_Sold|date:"g:ia"}}">
+                    title="{{item.Date_Sold|date:"g:ia"}}">
                     {{ item.Date_Sold|date:"m/d/y" }}
                 </td>
                 <td>{{ item.User }}</td>
@@ -114,6 +113,11 @@
     {% endif %}
 </div>
 
-
-
+<script>
+$(document).ready(function($) {
+    $(".table-row").click(function() {
+        window.document.location = $(this).data("href");
+    });
+});
+</script>
 {% endblock %}

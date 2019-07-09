@@ -1,0 +1,77 @@
+{% extends 'inventory/base.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% block body %}
+{% comment %} PARENT CARD {% endcomment %}
+<div class="card content-card c-group col-md-12 mx-auto p-0 ">
+    <div class="card-header"> <h4> Sales Information </h4> </div>
+    
+    <div class="row mx-auto col-md-12 mt-3">
+        {% comment %} ITEM CARD {% endcomment %}
+        <div class="card-content col-md-7 p-3">
+                {% comment %} TOTAL PRICE {% endcomment %} 
+                {% for item in saleslist %}                
+                    {% comment %} {{ item }} {% endcomment %}                    
+                    <div class="card item-card col-md-12 mx-0 my-1 p-2">
+                        <div class="row">
+                            <div class="col-md-4"> 
+                                <strong>{{ item.Item.Name }}</strong>
+                                <span class="item-desc">P {{ item.Item.List_Price|intcomma|floatformat:2 }} | {{ item.Item.Unit }} </span>                                 
+                            </div> 
+                            
+                            <div class="input-group col-md-4 d-flex justify-content-between align-items-center">
+                                <a href="" class="btn btn-"><i class="fas fa-plus"></i></a>
+                                <div> <span>{{ item.Quantity }} / {{ item.Item.Quantity }}</span> </div>                            
+                                <a href="" class="btn"><i class="fas fa-plus"></i></a>
+                            </div>
+                            
+                            <div class="col-md-3 text-right"> <strong class="txt-blue-d"> P {{ item.Total_Item_Price|floatformat:2 }} </strong></div>
+                
+                            <div class="col-md-1">
+                                <a href="{% url 'list-item-delete' item.pk %}" 
+                                    role="button" name="delete-item" >
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>                            
+                        </div>                        
+                    </div>
+                {% endfor %}
+                
+            </div>
+
+        {% comment %} SALES CARD {% endcomment %}
+        <div class="card dark-card col-md-5 p-0"> 
+            <div class="card-header ">Sales Info</div>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="card-content p-3">                    
+                    {{ form.media }}          
+                    <div class="form-row">                        
+                        <div class="col-md-4">{{ form.OR|as_crispy_field }}  </div>     
+                        <div class="col-md-6"> {{ form.Date_Sold|as_crispy_field }} </div> 
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="col-md-12"> {{ form.Customer|as_crispy_field }} </div>   
+                    </div>            
+                    <hr>
+                    <h6>Total Products : <strong>{{ product_count }}</strong></h6>
+                    <h6>Total Quantity : <strong>{{ total_quantity }}</strong></h6>
+                    <h6>Total Price : <strong>P {{ total_price|floatformat:2 }}</strong></h6>
+                    
+                </div>
+
+                {% comment %} BUTTONS
+                <div class="card-footer d-flex justify-content-end">
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-outline-primary  mt-2" name="button_register" value="Save">Save</button>  
+                        <button type="submit" class="btn btn-primary  mt-2" name="button_register_print" value="Save">Save &amp Print</button>  
+                    </div>
+                </div> {% endcomment %}
+                
+            </form>
+        </div>
+
+    </div>       
+</div>
+{% endblock %}

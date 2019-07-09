@@ -17,7 +17,7 @@
                 <div class="input-group">
                     {% crispy searchbox %}
                     <span class="input-group-btn">
-                        <button class="btn btn-info" type="Submit">Search</button>
+                        <button class="btn btn-info" type="Submit"> <i class="fas fa-search"></i> Search</button>
                     </span>
                 </div>
             </form>
@@ -48,9 +48,9 @@
                     </ul>
                 </a>
                 <div class="btn-group col-md-12 px-0 text-center" role="group" aria-label="Basic example">
-                    <a href="{% url 'purchase-view-pk' search_item.pk %}" class="btn btn-primary col-md-4">Buy</a>
-                    <a href="{% url 'sales-register' search_item.pk %}" class="btn btn-primary col-md-4">Sell</a>
-                    <a href="{% url 'dashboard' %}" class="btn btn-primary col-md-4">Clear</a>
+                    <a href="{% url 'purchase-view-pk' search_item.pk %}" class="btn btn-outline-primary col-md-4 btn-sm">Buy</a>
+                    <a href="{% url 'sales-register' search_item.pk %}" class="btn btn-outline-primary col-md-4 btn-sm">Sell</a>
+                    <a href="{% url 'dashboard' %}" class="btn btn-outline-primary col-md-4 btn-sm">Clear</a>
                 </div>
             </div>
             
@@ -146,7 +146,11 @@
                 <span class="float-right">Total Sales : <strong>P {{ total_sales|intcomma }}</strong></span>                
             </div>   
         </div>
-        <div class="card-footer text-muted px-0">
+        <div class="card-footer d-flex justify-content-end">
+            <div class="btn-group">
+                <a href="{% url 'sales-register' 0 %}" role="button" class="btn btn-outline-info btn-sm"> Sell Product </a>
+                <a href="{% url 'sales-summary' %}" role="button" class="btn btn-outline-info btn-sm"> View Summary </a>
+            </div>
         </div>
     </div>    
 </div>

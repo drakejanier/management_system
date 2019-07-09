@@ -15,6 +15,7 @@ from .forms import PurchaseForm, ProductForm, ProductFilterForm,PurchaseItemForm
 from datetime import datetime, date
 from .utils import render_to_pdf
 
+# import autocomplete_light_registry
 
 def print_products(request): #Print Product List
     template = get_template('pdf/products_pdf.html')

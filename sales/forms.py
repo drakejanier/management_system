@@ -1,15 +1,14 @@
-from django import forms
-from django.forms import Textarea, SelectDateWidget, DateField
-
 from .models import *
 from bootstrap_datepicker_plus import DatePickerInput
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit
 from dal import autocomplete
+from datetime import datetime, date
+from django import forms
+from django.forms import Textarea, SelectDateWidget, DateField
 from inventory.models import Products, Purchase
 #import autocomplete_light
-
-#autocomplete_light.register(Branch, name = 'ClientAutocomplete',choices = Products.objects.all())
+# autocomplete_light.register(Branch, name = 'ClientAutocomplete',choices = Products.objects.all())
 
 class SalesForm(forms.ModelForm):      
     class Meta:
@@ -29,3 +28,7 @@ class SalesListForm(forms.ModelForm):
     class Meta:
         model = tempSalesList
         fields = ('Item', 'Quantity')
+        
+class date_search(forms.Form):
+    date_start = forms.DateField(initial=datetime.today(), widget=DatePickerInput(format='%m/%d/%Y',attrs={"class": "form-control"}))
+    date_end = forms.DateField(initial=datetime.today(), widget=DatePickerInput(format='%m/%d/%Y',attrs={"class": "form-control"}))

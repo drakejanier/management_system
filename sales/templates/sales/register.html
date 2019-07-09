@@ -6,15 +6,20 @@
 <div class="card content-card c-group col-md-12 mx-auto p-0 ">
     <div class="card-header"> <h4> Sales Register </h4> </div>
     
-    <div class="row mx-auto col-md-12 mt-3">       
-        
+    <div class="row mx-auto col-md-12 mt-3">
         {% comment %} ITEM CARD {% endcomment %}
         <div class="card-content col-md-7 p-3">
                 <form action="" name="add-item" method="POST">
                     {% csrf_token %}        
                     {{ saleslist_form.media }}    
                     <div class="form-row">
-                        <div class="col-md-6">{{ saleslist_form.Item|as_crispy_field }}</div>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                {{ saleslist_form.Item|as_crispy_field }}
+
+                                <a href="{% url 'product-list' %}" target="_blank" rel="noopener noreferrer" class="mt-5"><i class="fas fa-search"></a></i>
+                            </div>                            
+                        </div>
                         <div class="col-md-2">{{ saleslist_form.Quantity|as_crispy_field }} </div>    
                         <div class="col-md-1"></div>   
                         <div class="col-md-2 mt-4">
@@ -30,7 +35,7 @@
                     <div class="card col-sm-12 mx-0 my-1 p-2">
                         <div class="row">
                             <div class="col-md-4"> 
-                                <h6> {{ item.get_Name }} vv/h6> 
+                                <h6> {{ item.get_Name }} </h6> 
                                 <p class = "mb-0"> {{ item.get_Unit }} |  {{ item.get_Price|floatformat:2 }} </p> 
                             </div> 
 
@@ -73,9 +78,13 @@
                     <h6>Total Price : <strong>P {{ total_price|floatformat:2 }}</strong></h6>
                     
                 </div>
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary  mt-2" name="button_register" value="Save">Register Sales</button>   
+                <div class="card-footer d-flex justify-content-end">
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-outline-primary  mt-2" name="button_register" value="Save">Save</button>  
+                        <button type="submit" class="btn btn-primary  mt-2" name="button_register_print" value="Save">Save &amp Print</button>  
+                    </div>
                 </div>
+                
             </form>
         </div>
 

@@ -4,13 +4,14 @@ from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import get_template
-from django.views.generic import ListView, CreateView, FormView, View
+from django.views.generic import ListView, CreateView, FormView, View, UpdateView, DetailView
 from django.urls import reverse_lazy
 from .models import Sales, tempSalesList, SalesList
 from inventory.models import Products, Purchase
-from .forms import SalesForm,SalesListForm
+from .forms import SalesForm,SalesListForm, date_search
 from shapeshifter.views import MultiFormView
 from inventory.utils import render_to_pdf
+
 
 # Create your views here.
 
@@ -79,7 +80,7 @@ def SalesView(request, pk):
                 sales_reg.save() #<<<<<<<<<<<<<<<< SALES saved here 
                 sales_id = sales_reg.pk
                 item_instance = Sales.objects.get(pk=sales_id)
-                                
+                
                 temp_list = tempSalesList.objects.all()                
                 
                 for obj in temp_list:
@@ -87,22 +88,22 @@ def SalesView(request, pk):
                     sales_list.SalesID = item_instance
                     sold_item = getattr(obj, 'Item')
                     sold_qty = getattr(obj, 'Quantity')
-                    
+                
                     sales_list.Item = sold_item
                     sales_list.Quantity = sold_qty
                     sales_list.Total_Item_Price = obj.get_total_item()
                     sales_list.save()  # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SALES LIST SAVED
-                    
+                
                     #deduct in Purchase Quantity
                     print(f'item pk = {sold_item.pk}')
                     item_purchase = Products.objects.get(pk = sold_item.pk) #search item in Purchase
                     item_purchase.Quantity = int(item_purchase.Quantity) - sold_qty
                     item_purchase.save()
-                    
+                
                 tempSalesList.objects.all().delete() # templist DELETED
                 messages.success(request, f'Items Saved')
-                return redirect('sales-register', 0)
-
+                # return redirect('sales-register', 0) #go back to sales register
+                return redirect ('sales-summary')#got to list
             else:
                 messages.info(request, f"Invalid form {sales_info.errors}. {total_qty}")
                 
@@ -153,24 +154,17 @@ def itemDeduct(request, pk):
     
     return redirect('sales-register', 0)
 
-# def SalesSummary(request): #TEMP GETTING OBSOLETE
-#     sales = Sales.objects.all()
-#     # search_form = ProductFilterForm()
-    
-#     context = {
-#         'sales' : sales,
-#         'title': 'Sales Summary',
-#         # 'search_form':search_form,
-#     }
-    
-    return render(request, 'sales/sales-summary.html', context)
-
 class SalesSummary(ListView):
     model = Sales
     queryset = Sales.objects.order_by('-Date_Sold')
     template_name = 'sales/sales-summary.html'
     context_object_name = 'sales'
     paginate_by = 5
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_form"] = date_search 
+        return context
     
     def post(self, request, *args, **kwargs):        
         
@@ -190,3 +184,33 @@ class SalesSummary(ListView):
             return HttpResponse("Not found")
         else:
             return self.get(request, *args, **kwargs)
+        
+class SalesDetails(UpdateView):
+    template_name = 'sales/sales-details.html'
+    model = Sales
+    form_class = SalesForm
+    success_url = '/thanks/'
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context[""] = 
+    #     return context
+    
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+        form.send_email()
+        return super().form_valid(form)
+    
+    def get_object(self, queryset=None):
+        obj = self.model.objects.get(pk=self.kwargs['pk'])
+        return obj
+    
+    def get_context_data(self, **kwargs):
+        context = super(SalesDetails,self).get_context_data(**kwargs) 
+        get_pk = self.kwargs['pk']           
+        sales_list=SalesList.objects.filter(SalesID=get_pk)        
+        context["saleslist"] = sales_list
+        return context
+    
+        

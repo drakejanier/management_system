@@ -27,8 +27,9 @@ class SalesList(models.Model):
     Total_Item_Price = models.DecimalField(max_digits=6, decimal_places=2, default=0)
     
     def __str__(self):
-        return '{0} {1}'.format(self.SalesID, self.Item)    
-    
+        return '{0} {1}'.format(self.SalesID, self.Item)
+        
+
         
 class tempSalesList(models.Model):
     # SalesID = models.ForeignKey(Sales, on_delete=models.CASCADE)
