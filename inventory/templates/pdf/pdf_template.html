@@ -1,0 +1,75 @@
+{% load static %}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>Product List</title>
+        <style type="text/css">
+            body {
+                font-weight: 200;
+                font-size: 11px;
+            }
+            th {
+                line-height:0;
+            }
+            .header {
+                font-size: 20px;
+                font-weight: 100;
+                text-align: center;
+                color: #007cae;
+            }
+            .title {
+                font-size: 22px;
+                font-weight: 100;
+                /* text-align: right;*/
+                padding: 10px 20px 0px 20px;  
+            }
+            .title span {
+                color: #007cae;0
+            }
+            .details {
+                padding: 10px 20px 0px 20px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+            }
+            .hrItem {
+                border: none;
+                height: 1px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+            th{ 
+                background-color:#2980b9;
+                color:#ffffff;
+                font-size:13px;
+                padding-left:5px;
+                padding-right:5px;
+                padding-top:2px;
+                padding-bottom:2px;
+
+            }
+            td{
+                padding-left:5px;
+                padding-right:5px;
+                padding-top:2px;
+                padding-bottom:2px;
+            }
+            h2{
+                font-size:20px;
+                margin-bottom:0;
+            }
+            h6{ 
+                font-weight:300;        
+                margin:0;
+            }
+                
+            
+        </style>
+    </head>
+    <body>
+        
+        {% block content %}
+        {% endblock content %}
+    </body>
+</html>

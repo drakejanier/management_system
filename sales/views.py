@@ -88,18 +88,24 @@ def SalesView(request, pk):
                     sales_list.SalesID = item_instance
                     sold_item = getattr(obj, 'Item')
                     sold_qty = getattr(obj, 'Quantity')
-                
+                    sales_PK = item_instance.pk
+                    
                     sales_list.Item = sold_item
                     sales_list.Quantity = sold_qty
                     sales_list.Total_Item_Price = obj.get_total_item()
                     sales_list.save()  # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SALES LIST SAVED
-                
+                    
                     #deduct in Purchase Quantity
                     print(f'item pk = {sold_item.pk}')
                     item_purchase = Products.objects.get(pk = sold_item.pk) #search item in Purchase
                     item_purchase.Quantity = int(item_purchase.Quantity) - sold_qty
                     item_purchase.save()
-                
+                    
+                    print(f"BUTTON REGISTER = {request.POST.get('button_register')}")
+                    if request.POST.get("button_register") == 'Print':  #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<SAVE AND PRINT
+                        print("SAVED AND PRINT ")
+                        return redirect('sales-details', pk=sales_PK)
+                        
                 tempSalesList.objects.all().delete() # templist DELETED
                 messages.success(request, f'Items Saved')
                 # return redirect('sales-register', 0) #go back to sales register
