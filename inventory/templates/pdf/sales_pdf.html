@@ -24,17 +24,21 @@
         </thead>
 
         <tbody>
-                                
+            {% if saleslist %}
+                <tr>
+                    <td width="500" ><strong>ITEMS</strong></td>
+                </tr>   
+            {% endif %}
             {% for salesitem in saleslist %} 
                 <tr>
                     <td width="500" >{{ salesitem.Item }}</td>
                     <td width="100" >{{ salesitem.Item.List_Price }}</td>
                     <td width="100" >{{ salesitem.Item.Quantity }}</td>
-                    <td width="100" >{{ salesitem.Total_Sales }}</td>
+                    <td width="100" >{{ salesitem.SalesID.Total_Sales }}</td>
                 </tr>                    
             {% endfor %}
 
-            {% if saleslist %}
+            {% if saleslist and services %}
                 <tr class="border_bottom">                        
                     <td height="20"> </td>                        
                 </tr>

@@ -101,15 +101,15 @@ def SalesView(request, pk):
                     item_purchase.Quantity = int(item_purchase.Quantity) - sold_qty
                     item_purchase.save()
                     
-                    print(f"BUTTON REGISTER = {request.POST.get('button_register')}")
-                    if request.POST.get("button_register") == 'Print':  #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<SAVE AND PRINT
-                        print("SAVED AND PRINT ")
-                        return redirect('sales-details', pk=sales_PK)
+                    # print(f"BUTTON REGISTER = {request.POST.get('button_register')}")
+                    # if request.POST.get("button_register") == 'Print':  #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<SAVE AND PRINT
+                    #     print("SAVED AND PRINT ")
+                    #     return redirect('sales-details', pk=sales_PK)
                         
                 tempSalesList.objects.all().delete() # templist DELETED
                 messages.success(request, f'Items Saved')
                 # return redirect('sales-register', 0) #go back to sales register
-                return redirect ('sales-summary')#got to list
+                return redirect('sales-details', pk=sales_PK)#got to list
             else:
                 messages.info(request, f"Invalid form {sales_info.errors}. {total_qty}")
                 
@@ -240,5 +240,3 @@ class SalesDetails(UpdateView):
             return HttpResponse("Not found")
         else:
             return self.get(request, *args, **kwargs)
-
-def print_sales()
