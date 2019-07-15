@@ -1,0 +1,54 @@
+{% extends 'pdf/pdf_template.html' %}
+
+{% block content %}
+{% include "pdf/header.html" %}
+<div class='header'>
+    <p class='title'>Statement</p>
+</div>
+<div class='details'>
+    <div class='details'>
+        <h5>
+            Ref # : <span class = "col-2">{{  sales.pk }}</span>
+            OR # : <sspan class = "col-2">{{  sales.OR }}</span>
+            Date : <span class = "col-6">{{  sales.Date_Sold }}</span>
+        </h5>
+        <h5>Name : <span>{{ sales.Customer }}</span>         </h5>
+        
+    </div>
+    <table class="table" id="product-table" >
+        <thead >
+            <th >DESCRIPTION</th>
+            <th >PRICE</th>
+            <th >QTY</th>
+            <th >TOTAL</th>
+        </thead>
+
+        <tbody>
+                                
+            {% for salesitem in saleslist %} 
+                <tr>
+                    <td width="500" >{{ salesitem.Item }}</td>
+                    <td width="100" >{{ salesitem.Item.List_Price }}</td>
+                    <td width="100" >{{ salesitem.Item.Quantity }}</td>
+                    <td width="100" >{{ salesitem.Total_Sales }}</td>
+                </tr>                    
+            {% endfor %}
+
+            {% if saleslist %}
+                <tr class="border_bottom">                        
+                    <td height="20"> </td>                        
+                </tr>
+            {% endif %}
+
+            {% for service in services %} 
+                <tr>
+                    <td width="500" >service.Item</td>
+                    <td width="100" >service.Price</td>
+                    <td width="100" >service.Quantity</td>
+                    <td width="100" >service.Total</td>
+                </tr>                    
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

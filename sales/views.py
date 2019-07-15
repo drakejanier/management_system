@@ -172,8 +172,7 @@ class SalesSummary(ListView):
         context["search_form"] = date_search 
         return context
     
-    def post(self, request, *args, **kwargs):        
-        
+    def post(self, request, *args, **kwargs):   
         if self.request.POST.get('btn-print') == 'btn-print':
             print("print posted")
             context = {
@@ -201,7 +200,7 @@ class SalesDetails(UpdateView):
     #     context = super().get_context_data(**kwargs)
     #     context[""] = 
     #     return context
-    
+
     def form_valid(self, form):
         # This method is called when valid form data has been POSTed.
         # It should return an HttpResponse.
@@ -211,12 +210,35 @@ class SalesDetails(UpdateView):
     def get_object(self, queryset=None):
         obj = self.model.objects.get(pk=self.kwargs['pk'])
         return obj
-    
+
     def get_context_data(self, **kwargs):
         context = super(SalesDetails,self).get_context_data(**kwargs) 
         get_pk = self.kwargs['pk']           
         sales_list=SalesList.objects.filter(SalesID=get_pk)        
         context["saleslist"] = sales_list
         return context
-    
-        
+
+    def post(self, request, *args, **kwargs):   
+        if self.request.POST.get('btn-print') == 'btn-print':
+            print("print posted")
+            get_pk = self.kwargs['pk']  
+            sales = Sales.objects.get(pk=get_pk)
+            print(f"sales {sales}")            
+            saleslist = SalesList.objects.filter(SalesID=get_pk)  
+            context = {
+                "sales" : sales,
+                "saleslist" : saleslist,
+            }
+
+            pdf= render_to_pdf('pdf/sales_pdf.html', context)
+            if pdf:
+                response =  HttpResponse(pdf,content_type='application/pdf')
+                filename = "Sales_%s.pdf" %("1")
+                content = "inline; filename='%s'" %(filename)
+                response['Content-Disposition'] = content
+                return response
+            return HttpResponse("Not found")
+        else:
+            return self.get(request, *args, **kwargs)
+
+def print_sales()

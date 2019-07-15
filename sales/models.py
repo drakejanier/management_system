@@ -28,9 +28,6 @@ class SalesList(models.Model):
     
     def __str__(self):
         return '{0} {1}'.format(self.SalesID, self.Item)
-        
-
-        
 class tempSalesList(models.Model):
     # SalesID = models.ForeignKey(Sales, on_delete=models.CASCADE)
     Item = models.OneToOneField(Products, on_delete=models.CASCADE, unique=True)
@@ -50,3 +47,5 @@ class tempSalesList(models.Model):
     
     def get_Price(self):
         return self.Item.List_Price
+    
+
