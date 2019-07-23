@@ -3,9 +3,9 @@
 {% load humanize %}
 {% block body %}
 {% comment %} PARENT CARD {% endcomment %}
-<div class="card content-card c-group col-md-12 mx-auto p-0 ">
+<div class="card content-card c-group col-md-12  ">
     <div class="row card-header">
-        <div class="col-7"><h4>Sales Summary</h4></div>
+        <div class="col-7"><h4>Sales Details</h4></div>
         <div class="col-4 text-right">
             <form action="" method="POST" target="_blank">
             {% csrf_token %}
@@ -72,9 +72,7 @@
                         <div class="col-md-12"> {{ form.Customer|as_crispy_field }} </div>   
                     </div>            
                     <hr>
-                    <h6>Total Products : <strong>{{ product_count }}</strong></h6>
-                    <h6>Total Quantity : <strong>{{ total_quantity }}</strong></h6>
-                    <h6>Total Price : <strong>P {{ total_price|floatformat:2 }}</strong></h6>
+                    <h5>Total Amount : <strong>P {{ sales.Total_Sales }}</strong></h5>
                     
                 </div>
 
