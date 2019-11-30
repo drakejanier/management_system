@@ -152,7 +152,7 @@ class SearchProducts(ListView):
         search_unit = self.request.GET.get('Unit')
         total_assets = 0
         total_qty = 0
-            
+        
         qsearch = Products.objects.all()
         qfilter =''
         

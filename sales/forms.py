@@ -29,6 +29,13 @@ class SalesListForm(forms.ModelForm):
         model = tempSalesList
         fields = ('Item', 'Quantity')
         
-class date_search(forms.Form):
-    date_start = forms.DateField(initial=datetime.today(), widget=DatePickerInput(format='%m/%d/%Y',attrs={"class": "form-control"}))
-    date_end = forms.DateField(initial=datetime.today(), widget=DatePickerInput(format='%m/%d/%Y',attrs={"class": "form-control"}))
+def first_date():
+    today = datetime.today()
+    return datetime.date(year=2019, month=7, day=1)
+
+class date_search(forms.Form):    
+    # first_day = f"{datetime.today().month}/1/{datetime.today().year}"
+    # date_start = forms.DateField(initial=first_day, widget=DatePickerInput(format='%m/%d/%Y',attrs={"class": "form-control"}))
+    # date_end = forms.DateField(initial=datetime.today(), widget=DatePickerInput(format='%m/%d/%Y',attrs={"class": "form-control"}))
+    date_start = forms.DateField(widget=DatePickerInput(format='%m/%d/%Y',attrs={"class": "form-control"}))
+    date_end = forms.DateField(widget=DatePickerInput(format='%m/%d/%Y',attrs={"class": "form-control"}))

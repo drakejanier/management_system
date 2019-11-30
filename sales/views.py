@@ -162,16 +162,35 @@ def itemDeduct(request, pk):
 
 class SalesSummary(ListView):
     model = Sales
-    queryset = Sales.objects.order_by('-Date_Sold')
+    # queryset = Sales.objects.order_by('-Date_Sold')
     template_name = 'sales/sales-summary.html'
     context_object_name = 'sales'
     paginate_by = 5
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["search_form"] = date_search 
+        context["search_form"] = date_search    
+        
         return context
     
+    def get_queryset(self):
+        qs = super().get_queryset()    
+        searchvalue= self.request.GET.get('search_date')
+        
+        if self.request.GET.get('search_date') == "search_date":
+            start_date = self.request.GET.get('date_start')
+            end_date = self.request.GET.get('date_end')
+        else:
+            start_date = "2019-06-01"
+            end_date = "2019-07-24"
+        
+        print(f"SEARCH VALUE = {searchvalue}")
+        
+        qs_filtered = qs.filter(Date_Sold__range=[start_date, end_date])
+        qs_ordered = qs_filtered.order_by('-Date_Sold')
+        
+        return qs_ordered
+
     def post(self, request, *args, **kwargs):   
         if self.request.POST.get('btn-print') == 'btn-print':
             print("print posted")
@@ -189,7 +208,7 @@ class SalesSummary(ListView):
             return HttpResponse("Not found")
         else:
             return self.get(request, *args, **kwargs)
-        
+
 class SalesDetails(UpdateView):
     template_name = 'sales/sales-details.html'
     model = Sales

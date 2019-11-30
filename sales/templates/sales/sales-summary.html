@@ -4,7 +4,8 @@
 {% block body %}
 
 <div class="card content-card col-md-10 mx-auto p-3">
-    <form action="" method="GET" >        
+    <form action="" method="GET" > 
+    
         {% csrf_token %}
         {% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
         {{ search_form.media }}
@@ -16,14 +17,13 @@
             </div>
             <div class="input-group col-md-4">
                 <span>To</span>
-                {{ search_form.date_start }}
+                {{ search_form.date_end }}
             </div>
             <div class="input-group col-md-4">
                 <span class="spacer">.</span>
                 <div class="input-group">
-                    <a href="" class="btn btn-primary col-12 " role="button"><i class="fas fa-search"></i> Search</a>
+                    <a href="" class="btn btn-primary col-12 " role="button" name="search_date" value="search_date"><i class="fas fa-search"></i> Search</a>
                 </div>
-                
             </div>
         </div>
         
