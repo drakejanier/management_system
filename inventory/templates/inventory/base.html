@@ -74,13 +74,29 @@
             <li>            
               <a href="#clinic-submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> <i class="fas fa-clinic-medical"></i></i> Clinic</a>
               <ul class="collapse list-unstyled" id="clinic-submenu">
+                <li>
+                  <a href="#">Prescriptions</a>
+                </li>
+                <li>
+                  <a href="#">Admissions</a>
+                </li>
+                <li>
+                  <a href="#">Billing</a>
+                </li>
+                <li>
+                  <a href="#">Pet Record</a>
+                </li>
                 <li>                  
-                  <a href="{% url 'sales-register' 0 %}">Client</a>
+                  <a href="#">Patient List</a>
                 </li>  
                 <li>
-                  <a href="{% url 'sales-summary' %}">Billing</a>
+                  <a href="#">Pet Record</a>
+                </li>
+                <li>
+                  <a href="#">Owner Info</a>
                 </li>
               </ul>
+              
             </li>
           {% endif %}
 
@@ -92,7 +108,7 @@
                 <a href="#" class="download">Contact Jerome</a>
             </li>
             <li>
-                <a href="#" class="article">Back to article</a>
+                <a href="#" class="article">www.laugo-clinic.com</a>
             </li>
         </ul>
       </nav>

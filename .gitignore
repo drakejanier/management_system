@@ -4,6 +4,7 @@ projectnotes.txt
 projectNotes.txt
 inventory/__pycache__/views.cpython-37.pyc
 *.pyc
+rsc/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
